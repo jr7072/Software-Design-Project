@@ -1,10 +1,10 @@
+import Image from 'next/image'
+
 // fuel quote page
 
-const FuelQuote = () =>{
-
-    return (
-        <h1>Fuel Qoute Page</h1>
+export default function FuelQuote(){
+    return(
+        <div class = "flex h-screen w full">
+        </div>
     )
 }
-
-export default FuelQuote;
