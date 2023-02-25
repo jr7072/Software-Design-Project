@@ -84,13 +84,8 @@
   margin: 0;
 }
 
-.formWrapper{
+.form{
   background-color: #ebdede;
-  padding: 15px;
-  width: auto;
-  height: auto;
-  border-radius: 15px;
-  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
 }
 
 .navWrapper {
