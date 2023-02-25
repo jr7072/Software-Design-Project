@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
 import NavBar from '@/components/NavBar.js'
+import Login from '@/Forms/login.js'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -37,7 +38,7 @@ export default function Home() {
                     <p className={styles.subText}>Join the millions of businesses that use fuel quote today!</p>
                   </div>
                   <div className={styles.formWrapper}>
-                    {/* add login form here */}
+                    <Login />
                   </div>
                 </div>
               </div>
