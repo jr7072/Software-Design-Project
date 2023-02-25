@@ -8,6 +8,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         'registration_pattern': "url('/register_pattern.png')",
+        'quote_history': "url('/quote_history.png')", 
         
       }
     },

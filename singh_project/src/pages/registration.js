@@ -26,15 +26,20 @@ const Registration = () => {
                         placeholder="Password" />
 
 
-                    <button  
+                    {/* <button  
 
                         type = "button"
                         href = "#"
                         class="mt-4 w-full bg-orange-300 font-semibold py-2 rounded-md  tracking-wide">
                         Submit
                     
-                    </button>
+                    </button> */}
 
+
+                    <a href="../login/"
+                        class="rounded-lg bg-yellow-600 px-3 py-2 text-white transition hover:bg-red-700 items-center">Submit
+
+                    </a>
                     
 
                     {/* <a href="../login/"
