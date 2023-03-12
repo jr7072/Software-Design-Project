@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body{
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+}
+
+.formWrapper{
+  padding: 15px;
+  width: auto;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;
+}
