@@ -5,5 +5,10 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.21"
+  },
+  "scripts": {
+    "test": "jest",
+    "start": "nodemon app.js -port=4080",
+    "dev": "nodemon app.js -port=3080"
   }
 }
