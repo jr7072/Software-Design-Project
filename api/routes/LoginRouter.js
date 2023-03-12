@@ -1,8 +1,8 @@
 const express = require('express');
-const router = express.router();
+const router = express.Router();
 
 // middleware here
 
 //routes here
 
-export default router
+module.exports = router;
