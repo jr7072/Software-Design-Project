@@ -57,7 +57,7 @@ it('should return user data by id', async () => {
 })
 
 
-it("returns falsy if user doesn't exist", async () => {
+it("throws error if user doesn't exist", async () => {
 
   getUsers.mockReturnValue(
     [
@@ -72,11 +72,7 @@ it("returns falsy if user doesn't exist", async () => {
     ]
   );
 
-  const expected = []
-
-  const result = await getUserData(2);
-
-  expect(result).toStrictEqual(expected);
+  await expect(() => getUserData(2)).toThrow("User doesn't exist");
 })
 
 
@@ -120,7 +116,7 @@ it("updates user's data", async () => {
     "zipCode": "67891"
   }
 
-  const result = await updateUserData(1, expected);
+  const result = await updateUserData(1, argument);
 
   expect(result).toStrictEqual(expected);
 
@@ -161,13 +157,9 @@ it("updates user data on one field", async () => {
 
   const argument = {
     "fullName": "Jane Greer",
-    "addressLine1": "456 Elm St",
-    "addressLine2": "Apt 2B",
-    "city": "Somecity",
-    "zipCode": "67890"
   }
 
-  const result = await updateUserData(2, expected);
+  const result = await updateUserData(2, argument);
   
   expect(result).toStrictEqual(expected);
 })
@@ -187,14 +179,29 @@ it("raises an error if user doesn't exist", async () => {
     ]
   );
 
-  const argument = {
-    "fullName": "Jane Greer",
-    "addressLine1": "456 Elm St",
-    "addressLine2": "Apt 2B",
-    "city": "Somecity",
-    "zipCode": "67890"
-  }
-
-  await expect(() => updateUserData(2, argument)).
+  await expect(() => updateUserData(2, {})).
                         toThrow("User doesn't exist");
+})
+
+it("throws an error if user field is not valid", async () => {
+
+  getUsers.mockReturnValue(
+    [
+      {
+        "id": 1,
+        "fullName": "John Doe",
+        "addressLine1": "123 Main St",
+        "addressLine2": null,
+        "city": "Anytown",
+        "zipCode": "12345"
+      }
+    ] 
+  );
+
+  const argument = {
+    "shirt size": "large"
+  };
+
+  await expect(() => updateUserData(1, argument)).toThrow("Invalid field: shirt size");
+
 })
