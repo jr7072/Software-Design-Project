@@ -39,16 +39,14 @@ it('should return user data by id', async () => {
     ]     
   );
 
-  const expected = [
-    {
-      "id": 2,
-      "fullName": "Jane Smith",
-      "addressLine1": "456 Elm St",
-      "addressLine2": "Apt 2B",
-      "city": "Somecity",
-      "zipCode": "67890"
-    }
-  ];
+  const expected = {
+    "id": 2,
+    "fullName": "Jane Smith",
+    "addressLine1": "456 Elm St",
+    "addressLine2": "Apt 2B",
+    "city": "Somecity",
+    "zipCode": "67890"
+  };
   
   const result = await getUserData(2);
   

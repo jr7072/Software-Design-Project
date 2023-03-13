@@ -10,7 +10,7 @@ const getUserData = (id) => {
         throw new Error("User doesn't exist");
     }
 
-    return user_data;
+    return user_data[0];
 }
 
 

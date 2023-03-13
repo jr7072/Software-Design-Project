@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
 // routers here
 app.use('/login', login);
 app.use('/fuelquote', fuelquote);
-app.use('./users', users);
+app.use('/users', users);
 
 
 //start server
