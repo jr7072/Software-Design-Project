@@ -6,6 +6,7 @@ api/package-lock.json
 singh_project/yarn.lock
 api/yarn.lock
 package-lock.json
+node_modules
 
 # dependencies
 singh_project/node_modules
