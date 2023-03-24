@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 //internal modules
-const {getUserData, updateUserData} = require('../controllers/UserController');
+const {getUserData, updateUserData, validateFields, checkFieldStatus} = require('../controllers/UserController');
 const {
     updateUser,
     createUser,
@@ -36,12 +36,26 @@ router.get('/:id', (req, res) => {
 router.put('/:id', (req, res) => {
     try {
 
+        // get data
         const id = req.params.id;
         const data = req.body;
-        const updated_data = updateUserData(id, data);
-        // call a database update here
-        const json_data = JSON.stringify(updated_data);
-        res.status(400).send(json_data); 
+        
+        // test data
+        const dataResults = validateFields(data);
+        
+        // check data
+        const passed = checkFieldStatus(dataResults);
+
+        if (!passed){
+            // if not passed send test results
+            res.status(400).send(dataResults);
+            return
+        }
+
+        // update if passed
+        const updatedData = updateUserData(id, data);
+        const json_data = JSON.stringify(updatedData);
+        res.status(204).send(json_data); 
 
     } catch (error) {
 
