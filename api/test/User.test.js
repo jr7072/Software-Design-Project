@@ -1,6 +1,11 @@
 // test for user registration
 
-const {getUserData, updateUserData} = require('../controllers/UserController');
+const {
+  getUserData,
+  updateUserData,
+  validateFields,
+  checkFieldStatus  
+} = require('../controllers/UserController');
 const {getUsers} = require('../models/UserDB');
 
 
@@ -14,37 +19,45 @@ it('should return user data by id', async () => {
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
-      },
-      {
+    },
+    {
         "id": 2,
-        "fullName": "Jane Smith",
+        "firstName": "Jane",
+        "lastName": "Smith",
         "addressLine1": "456 Elm St",
         "addressLine2": "Apt 2B",
         "city": "Somecity",
+        "state": "TX",
         "zipCode": "67890"
-      },
-      {
+    },
+    {
         "id": 3,
-        "fullName": "Bob Johnson",
+        "firstName": "Bob",
+        "lastName": "Johnson",
         "addressLine1": "789 Oak St",
         "addressLine2": null,
         "city": "Othercity",
+        "state": 'TX',
         "zipCode": "24680"
-      }
+    },
     ]     
   );
 
   const expected = {
     "id": 2,
-    "fullName": "Jane Smith",
+    "firstName": "Jane",
+    "lastName": "Smith",
     "addressLine1": "456 Elm St",
     "addressLine2": "Apt 2B",
     "city": "Somecity",
+    "state": "TX",
     "zipCode": "67890"
   };
   
@@ -61,10 +74,12 @@ it("throws error if user doesn't exist", async () => {
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
       }
     ]
@@ -80,36 +95,41 @@ it("updates user's data", async () => {
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
-      },
-      {
+    },
+    {
         "id": 2,
-        "fullName": "Jane Smith",
+        "firstName": "Jane",
+        "lastName": "Smith",
         "addressLine1": "456 Elm St",
         "addressLine2": "Apt 2B",
         "city": "Somecity",
+        "state": "TX",
         "zipCode": "67890"
-      },
+    },
     ]
   );
 
   const expected = {
     "id": 1,
-    "fullName": "James Doe",
+    "firstName": "James",
+    "lastName": "Doe",
     "addressLine1": "456 Main St",
     "addressLine2": null,
     "city": "Chatown",
+    "state": "CA",
     "zipCode": "67891"
   };
 
   const argument = {
-    "fullName": "James Doe",
+    "firstName": "James",
     "addressLine1": "456 Main St",
-    "addressLine2": null,
     "city": "Chatown",
     "zipCode": "67891"
   }
@@ -127,34 +147,40 @@ it("updates user data on one field", async () => {
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
-      },
-      {
+    },
+    {
         "id": 2,
-        "fullName": "Jane Smith",
+        "firstName": "Jane",
+        "lastName": "Smith",
         "addressLine1": "456 Elm St",
         "addressLine2": "Apt 2B",
         "city": "Somecity",
+        "state": "TX",
         "zipCode": "67890"
-      },
+    },
     ]
   );
 
   const expected = {
     "id": 2,
-    "fullName": "Jane Greer",
+    "firstName": "Jane",
+    "lastName": "Greer",
     "addressLine1": "456 Elm St",
     "addressLine2": "Apt 2B",
     "city": "Somecity",
+    "state": 'TX',
     "zipCode": "67890"
   };
 
   const argument = {
-    "fullName": "Jane Greer",
+    "lastName": "Greer",
   }
 
   const result = await updateUserData(2, argument);
@@ -162,18 +188,21 @@ it("updates user data on one field", async () => {
   expect(result).toStrictEqual(expected);
 })
 
+
 it("raises an error if user doesn't exist", async () => {
 
   getUsers.mockReturnValue(
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
-      }
+    }
     ]
   );
 
@@ -181,25 +210,150 @@ it("raises an error if user doesn't exist", async () => {
                         toThrow("User doesn't exist");
 })
 
+
 it("throws an error if user field is not valid", async () => {
 
   getUsers.mockReturnValue(
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
-      }
+    }
     ] 
   );
 
   const argument = {
-    "shirt size": "large"
+    "shirt size": {value: "large"}
   };
 
   await expect(() => updateUserData(1, argument)).toThrow("Invalid field: shirt size");
 
+})
+
+
+it("validates user data and returns accepted for each field", () => {
+
+  const input = {
+    "firstName": "John",
+    "lastName": "Doe",
+    "addressLine1": "123 Main St",
+    "addressLine2": null,
+    "city": "Anytown",
+    "state": "CA",
+    "zipCode": "12345"
+  }
+
+  const expected_result = {
+    "firstName": {valid: true, message: 'accepted'},
+    "lastName": {valid: true, message: 'accepted'},
+    "addressLine1": {valid: true, message: 'accepted'},
+    "addressLine2": {valid: true, message: 'accepted'},
+    "city": {valid: true, message: 'accepted'},
+    "state": {valid: true, message: 'accepted'},
+    "zipCode": {valid: true, message: 'accepted'}
+  }
+
+  const result = validateFields(input);
+
+  expect(result).toStrictEqual(expected_result);
+
+})
+
+
+it("catched length errors in proposed inputs", () => {
+
+  const input = {
+    "firstName": "Johnafsdsddddfdsklfjdskljfdsalkjfdlsjfldsakjfdlskajflkdasjfkldsjf",
+    "lastName": "Doe",
+    "addressLine1": "123 Main Stdfsahkfjdsalk;fjdsajfkdslf;dsajfkdsal;fjdskalf;dsajkffdasjfdsajfkdlafjdkslafjdsal;kfjdsklfds",
+    "addressLine2": null,
+    "city": "Anytownfdjsakfjdsklafjdslka;fjdkslafjd;safjkdls;afjdklsa;fjdksal;fjdksl;fasdffdsfdsfdsafdsafdsafdsafdsafdsafdsafdas",
+    "state": "CA",
+    "zipCode": "12343243242423"
+  }
+
+  const expected_result = {
+    "firstName": {valid: false, message: 'expected input length to be between 0 and 50'},
+    "lastName": {valid: true, message: 'accepted'},
+    "addressLine1": {valid: false, message: 'expected input length to be between 0 and 100'},
+    "addressLine2": {valid: true, message: 'accepted'},
+    "city": {valid: false, message: 'expected input length to be between 0 and 100'},
+    "state": {valid: true, message: 'accepted'},
+    "zipCode": {valid: false, message: 'expected input length to be between 5 and 9'}
+  }
+
+  const result = validateFields(input);
+
+  expect(result).toStrictEqual(expected_result);
+})
+
+
+it("catches fields that are required but empty", () => {
+
+  const input = {
+    "firstName": "",
+    "lastName": "Doe",
+    "addressLine1": "123 Main St",
+    "addressLine2": null,
+    "city": "",
+    "state": "CA",
+    "zipCode": ""
+  }
+
+  const expectedResult = {
+    "firstName": {valid: false, message: 'required'},
+    "lastName": {valid: true, message: 'accepted'},
+    "addressLine1": {valid: true, message: 'accepted'},
+    "addressLine2": {valid: true, message: 'accepted'},
+    "city": {valid: false, message: 'required'},
+    "state": {valid: true, message: 'accepted'},
+    "zipCode": {valid: false, message: 'required'}
+  }
+  
+  const result = validateFields(input);
+
+  expect(result).toStrictEqual(expectedResult);
+
+})
+
+
+it("checks that all data is valid", () => {
+
+  const input = {
+    "firstName": {valid: true, message: 'accepted'},
+    "lastName": {valid: true, message: 'accepted'},
+    "addressLine1": {valid: true, message: 'accepted'},
+    "addressLine2": {valid: true, message: 'accepted'},
+    "city": {valid: true, message: 'accepted'},
+    "state": {valid: true, message: 'accepted'},
+    "zipCode": {valid: true, message: 'accepted'}
+  }
+
+  const result = checkFieldStatus(input);
+
+  expect(result).toBeTruthy();
+
+})
+
+it("detects that a field is invalid", () => {
+
+  const input = {
+    "firstName": {valid: false, message: 'required'},
+    "lastName": {valid: true, message: 'accepted'},
+    "addressLine1": {valid: true, message: 'accepted'},
+    "addressLine2": {valid: true, message: 'accepted'},
+    "city": {valid: false, message: 'required'},
+    "state": {valid: true, message: 'accepted'},
+    "zipCode": {valid: false, message: 'required'}
+  }
+
+  const result = checkFieldStatus(input);
+
+  expect(result).toBeFalsy();
 })
