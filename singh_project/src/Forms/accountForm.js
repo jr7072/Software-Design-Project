@@ -1,7 +1,7 @@
 import States from "../components/states"
 import { useEffect, useReducer } from "react"
 import { useRouter } from "next/router"
-import axios, { HttpStatusCode } from 'axios'
+import axios, { AxiosError, HttpStatusCode } from 'axios'
 
 
 //assume user 1 in logged in for now
@@ -10,13 +10,13 @@ const user_id = 1;
 
 //form initial state
 const initialState = {
-  firstName: {value: "", required: true},
-  lastName: {value: "", required: true},
-  addressLine1: {value: "", required: true},
-  addressLine2: {value: "", required: false},
-  city: {value: "", required: true},
-  state: {value: "", required: true},
-  zipCode: {value: "", required: true},
+  firstName:  "",
+  lastName: "",
+  addressLine1: "",
+  addressLine2: "",
+  city: "",
+  state: "",
+  zipCode: ""
 }
 
 
@@ -49,9 +49,17 @@ const AccountForm = () => {
   const router = useRouter();
 
   const fetchUserData = async () => {
-  
+    
     const endpoint = `http://localhost:3080/users/${user_id}`;
-    const response = await axios.get(endpoint);
+    const config = {
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    }
+
+    const response = await axios.get(endpoint, config);
     const jsonResponse = await response.data;
 
     for (const [field, value] of Object.entries(jsonResponse)) {
@@ -60,30 +68,94 @@ const AccountForm = () => {
         continue;
       }
 
-
       const inputField = document.getElementById(field);
-      console.log(inputField, field)
       inputField.value = value;
       
-      dispatch({type: field, payload: {...state[field], value: value}});
+      dispatch({type: field, payload: value});
 
     }
 
   }
 
 
-  const send_user_data = async() => {
+  const sendUserData = async() => {
     
     const endpoint = `http://localhost:3080/users/${user_id}`;
-    const body = state
+    const body = state;
 
-    const response = await axios.put(endpoint, body);
-    const jsonResponse = await response.data;
+    try {
 
-    console.log(jsonResponse);
+      // try to upload data
+      const response = await axios.put(endpoint, body);
+      const status = await response.status;
+
+      // handle http accepted but not successful
+      if (status !== 204){
+        throw(`resource not updated returned ${status}`);
+      }
+
+      // push route if successful
+      router.push('/fuel_quote');
+
+    }catch(error){
+    
+      // looking only for axios error
+      if (error instanceof AxiosError){
+
+        //just check for a bad response
+        if (error.response.status === 400){
+          // use this block to display errors
+
+          const jsonResponse = error.response.data;
+
+          // add form styling to indicate errors
+          for (const [field, status] of Object.entries(jsonResponse)){
+    
+            if (!status.valid){
+              const fieldElement = document.getElementById(field);
+              fieldElement.classList.add('border-red-500');
+              
+              // get parent element
+              const fieldParent = fieldElement.parentElement;
+              const warningElement = document.createElement('p');
+              warningElement.classList.add('text-red-500');
+              warningElement.innerHTML = status.message;
+
+              fieldParent.appendChild(warningElement);
+            }
+    
+          }
+
+          return
+        }
+      }
+
+      //raise everything else
+      throw(error)
+    }
     
   }
 
+  const resetFields = () => {
+
+    for (const field of Object.keys(state)){
+
+      // get element and reset border
+      const fieldElement = document.getElementById(field);
+      fieldElement.classList.remove('border-red-500');
+      fieldElement.classList.add('border-gray-200');
+      
+      // remove message
+      const parentElement = fieldElement.parentElement;
+      const pElement = parentElement.querySelector('p');
+
+      if (!pElement){
+        continue;
+      }
+
+      pElement.remove();
+    }
+  }
 
   useEffect(() => {
     fetchUserData();
@@ -91,12 +163,13 @@ const AccountForm = () => {
 
   const onChange = (e) => {
     let id = e.target.id;
-    dispatch({type: id, payload: {...state[id], value: e.target.value}});
+    dispatch({type: id, payload: e.target.value});
   }
 
   const submitFunction = (e) => {
     e.preventDefault();
-    send_user_data()
+    resetFields();
+    sendUserData()
   }
 
   return(
