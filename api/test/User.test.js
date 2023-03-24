@@ -14,37 +14,45 @@ it('should return user data by id', async () => {
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
-      },
-      {
+    },
+    {
         "id": 2,
-        "fullName": "Jane Smith",
+        "firstName": "Jane",
+        "lastName": "Smith",
         "addressLine1": "456 Elm St",
         "addressLine2": "Apt 2B",
         "city": "Somecity",
+        "state": "TX",
         "zipCode": "67890"
-      },
-      {
+    },
+    {
         "id": 3,
-        "fullName": "Bob Johnson",
+        "firstName": "Bob",
+        "lastName": "Johnson",
         "addressLine1": "789 Oak St",
         "addressLine2": null,
         "city": "Othercity",
+        "state": 'TX',
         "zipCode": "24680"
-      }
+    },
     ]     
   );
 
   const expected = {
     "id": 2,
-    "fullName": "Jane Smith",
+    "firstName": "Jane",
+    "lastName": "Smith",
     "addressLine1": "456 Elm St",
     "addressLine2": "Apt 2B",
     "city": "Somecity",
+    "state": "TX",
     "zipCode": "67890"
   };
   
@@ -61,10 +69,12 @@ it("throws error if user doesn't exist", async () => {
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
       }
     ]
@@ -80,38 +90,43 @@ it("updates user's data", async () => {
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
-      },
-      {
+    },
+    {
         "id": 2,
-        "fullName": "Jane Smith",
+        "firstName": "Jane",
+        "lastName": "Smith",
         "addressLine1": "456 Elm St",
         "addressLine2": "Apt 2B",
         "city": "Somecity",
+        "state": "TX",
         "zipCode": "67890"
-      },
+    },
     ]
   );
 
   const expected = {
     "id": 1,
-    "fullName": "James Doe",
+    "firstName": "James",
+    "lastName": "Doe",
     "addressLine1": "456 Main St",
     "addressLine2": null,
     "city": "Chatown",
+    "state": "CA",
     "zipCode": "67891"
   };
 
   const argument = {
-    "fullName": "James Doe",
-    "addressLine1": "456 Main St",
-    "addressLine2": null,
-    "city": "Chatown",
-    "zipCode": "67891"
+    "firstName": {value: "James"},
+    "addressLine1": {value: "456 Main St"},
+    "city": {value: "Chatown"},
+    "zipCode": {value: "67891"}
   }
 
   const result = await updateUserData(1, argument);
@@ -127,34 +142,40 @@ it("updates user data on one field", async () => {
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
-      },
-      {
+    },
+    {
         "id": 2,
-        "fullName": "Jane Smith",
+        "firstName": "Jane",
+        "lastName": "Smith",
         "addressLine1": "456 Elm St",
         "addressLine2": "Apt 2B",
         "city": "Somecity",
+        "state": "TX",
         "zipCode": "67890"
-      },
+    },
     ]
   );
 
   const expected = {
     "id": 2,
-    "fullName": "Jane Greer",
+    "firstName": "Jane",
+    "lastName": "Greer",
     "addressLine1": "456 Elm St",
     "addressLine2": "Apt 2B",
     "city": "Somecity",
+    "state": 'TX',
     "zipCode": "67890"
   };
 
   const argument = {
-    "fullName": "Jane Greer",
+    "lastName": {value: "Greer"},
   }
 
   const result = await updateUserData(2, argument);
@@ -168,12 +189,14 @@ it("raises an error if user doesn't exist", async () => {
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
-      }
+    }
     ]
   );
 
@@ -187,17 +210,19 @@ it("throws an error if user field is not valid", async () => {
     [
       {
         "id": 1,
-        "fullName": "John Doe",
+        "firstName": "John",
+        "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
+        "state": "CA",
         "zipCode": "12345"
-      }
+    }
     ] 
   );
 
   const argument = {
-    "shirt size": "large"
+    "shirt size": {value: "large"}
   };
 
   await expect(() => updateUserData(1, argument)).toThrow("Invalid field: shirt size");

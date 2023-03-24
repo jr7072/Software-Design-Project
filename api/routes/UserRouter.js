@@ -41,7 +41,7 @@ router.put('/:id', (req, res) => {
         const updated_data = updateUserData(id, data);
         // call a database update here
         const json_data = JSON.stringify(updated_data);
-        res.status(200).send(json_data); 
+        res.status(400).send(json_data); 
 
     } catch (error) {
 

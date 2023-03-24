@@ -25,13 +25,13 @@ const updateUserData = (id, data) => {
 
     user_object = user_data[0];
   
-    for (const [key, value] of Object.entries(data)){
+    for (const [key, metadata] of Object.entries(data)){
         
         if (!user_object.hasOwnProperty(key)){
             throw new Error(`Invalid field: ${key}`);
         }
 
-        user_object[key] = value;
+        user_object[key] = metadata.value;
     }
 
     return user_object;

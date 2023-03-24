@@ -1,7 +1,7 @@
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const args = require('args-parser')(process.argv);
+const cors = require('cors')
 
 //routers
 const users = require('./routes/UserRouter');
@@ -16,6 +16,9 @@ let port = 3080;
 if (args.port) {
     port = args.port;
 }
+
+//cors middleware
+app.use(cors())
 
 // body parser middleware
 app.use(bodyParser.json());
