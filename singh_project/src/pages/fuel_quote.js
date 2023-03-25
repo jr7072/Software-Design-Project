@@ -1,9 +1,5 @@
 import Image from 'next/image'
 
-
-
-
-
 // fuel quote page
 
 export default function FuelQuote(){

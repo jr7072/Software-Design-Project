@@ -1,68 +1,175 @@
 import States from "../components/states"
-import { useReducer, useState } from "react"
+import { useEffect, useReducer } from "react"
 import { useRouter } from "next/router"
+import axios, { AxiosError, HttpStatusCode } from 'axios'
 
+
+//assume user 1 in logged in for now
+const user_id = 1;
+
+
+//form initial state
 const initialState = {
-  firstName: {value: "", required: true},
-  lastName: {value: "", required: true},
-  address1: {value: "", required: true},
-  address2: {value: "", required: false},
-  city: {value: "", required: true},
-  state: {value: "", required: true},
-  zip: {value: "", required: true},
+  firstName:  "",
+  lastName: "",
+  addressLine1: "",
+  addressLine2: "",
+  city: "",
+  state: "",
+  zipCode: ""
 }
-  
+
+
 const reducer = (state, action) => {
   switch(action.type) {
+
     case "firstName":
       return {...state, firstName: action.payload};
     case "lastName":
       return {...state, lastName: action.payload};
-    case "address1":
-      return {...state, address1: action.payload};
-    case "address2":
-      return {...state, address2: action.payload};
+    case "addressLine1":
+      return {...state, addressLine1: action.payload};
+    case "addressLine2":
+      return {...state, addressLine2: action.payload};
     case "city":
       return {...state, city: action.payload};
     case "state":
       return {...state, state: action.payload};
-    case "zip":
-      return {...state, zip: action.payload};
+    case "zipCode":
+      return {...state, zipCode: action.payload};
     default:
       return state;
   }
 }
 
+
 const AccountForm = () => {
   
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [valid, setValid] = useState(true);
   const router = useRouter();
 
-  const onChange = (e) => {
-    let id = e.target.id
-    dispatch({type: id, payload: {...state[id], value: e.target.value}});
+  const fetchUserData = async () => {
+    
+    const endpoint = `http://localhost:3080/users/${user_id}`;
+    const config = {
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    }
+
+    const response = await axios.get(endpoint, config);
+    const jsonResponse = await response.data;
+
+    for (const [field, value] of Object.entries(jsonResponse)) {
+      
+      if (field === "id") {
+        continue;
+      }
+
+      const inputField = document.getElementById(field);
+      inputField.value = value;
+      
+      dispatch({type: field, payload: value});
+
+    }
+
   }
 
-  const checker = (key, currState) => {
-    if (currState.value === "" && currState.required === true) {
-      let field = document.getElementById(key);
-      field.classList.add("border-red-500");
-      setValid(false)
+
+  const sendUserData = async() => {
+    
+    const endpoint = `http://localhost:3080/users/${user_id}`;
+    const body = state;
+
+    try {
+
+      // try to upload data
+      const response = await axios.put(endpoint, body);
+      const status = await response.status;
+
+      // handle http accepted but not successful
+      if (status !== 204){
+        throw(`resource not updated returned ${status}`);
+      }
+
+      // push route if successful
+      router.push('/fuel_quote');
+
+    }catch(error){
+    
+      // looking only for axios error
+      if (error instanceof AxiosError){
+
+        //just check for a bad response
+        if (error.response.status === 400){
+          // use this block to display errors
+
+          const jsonResponse = error.response.data;
+
+          // add form styling to indicate errors
+          for (const [field, status] of Object.entries(jsonResponse)){
+    
+            if (!status.valid){
+              const fieldElement = document.getElementById(field);
+              fieldElement.classList.add('border-red-500');
+              
+              // get parent element
+              const fieldParent = fieldElement.parentElement;
+              const warningElement = document.createElement('p');
+              warningElement.classList.add('text-red-500');
+              warningElement.innerHTML = status.message;
+
+              fieldParent.appendChild(warningElement);
+            }
+    
+          }
+
+          return
+        }
+      }
+
+      //raise everything else
+      throw(error)
     }
+    
+  }
+
+  const resetFields = () => {
+
+    for (const field of Object.keys(state)){
+
+      // get element and reset border
+      const fieldElement = document.getElementById(field);
+      fieldElement.classList.remove('border-red-500');
+      fieldElement.classList.add('border-gray-200');
+      
+      // remove message
+      const parentElement = fieldElement.parentElement;
+      const pElement = parentElement.querySelector('p');
+
+      if (!pElement){
+        continue;
+      }
+
+      pElement.remove();
+    }
+  }
+
+  useEffect(() => {
+    fetchUserData();
+  }, [])
+
+  const onChange = (e) => {
+    let id = e.target.id;
+    dispatch({type: id, payload: e.target.value});
   }
 
   const submitFunction = (e) => {
     e.preventDefault();
-    setValid(true);
-
-    for (const [key, value] of Object.entries(state)) {
-      checker(key, value);
-    }
-
-    if (valid) {
-      router.push("/fuel_quote");
-    }
+    resetFields();
+    sendUserData()
   }
 
   return(
@@ -84,19 +191,19 @@ const AccountForm = () => {
         </div>
         <div class="flex flex-wrap -mx-3 mb-6">
           <div class="w-full px-3">
-            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="address1">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="addressLine1">
               Address Line 1
             </label>
-            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="address1" type="text" placeholder="ex. 12345 Sesame St." onChange={onChange}></input>
+            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="addressLine1" type="text" placeholder="ex. 12345 Sesame St." onChange={onChange}></input>
         
           </div>
         </div>
         <div class="flex flex-wrap -mx-3 mb-6">
           <div class="w-full px-3">
-            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="address2">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="addressLine2">
               Address Line 2
             </label>
-            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="address2" type="text" placeholder="Apt 4206" onChange={onChange}></input>
+            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="addressLine2" type="text" placeholder="Apt 4206" onChange={onChange}></input>
      
           </div>
         </div>
@@ -123,15 +230,15 @@ const AccountForm = () => {
             </div>
           </div>
           <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
-            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="zip">
+            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="zipCode">
               Zip
             </label>
-            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="zip" type="text" placeholder="90210" onChange={onChange}></input>
+            <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="zipCode" type="text" placeholder="90210" onChange={onChange}></input>
 
           </div>
         </div>
         <div class='flex w-full justify-end items-center mt-10 mb-3'>
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" type="submit" onClick={submitFunction}>
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" type='submit' onClick={submitFunction}>
             Submit
           </button>
 
