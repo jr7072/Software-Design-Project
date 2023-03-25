@@ -7,7 +7,7 @@ const {
     updateUser,
     createUser,
     deleteUser
-} = require('../models/UserDB');
+} = require('../models/UserDB'); 
 
 // middleware here
 
