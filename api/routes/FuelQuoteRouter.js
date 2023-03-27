@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { validateFields, checkFieldStatus } = require('../controllers/UserController');
 
-// Example fuel quote database
-const fuelQuotesDB = [];
 
 // GET route for retrieving fuel quote data based on user ID
 router.get('/:id/fuel-quotes', (req, res) => {
