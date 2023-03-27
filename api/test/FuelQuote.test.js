@@ -1,71 +1,61 @@
-const { validateFields, checkFieldStatus } = require('../controllers/UserController');
+const request = require('supertest')
+const express = require('express');
+const bodyParser = require('body-parser');
+const fuelQuotesRouter = require('../routes/fuelQuoteRouter');
 
-it('should return an error for missing fields', () => {
-  const data = {
-    gallons: '',
-    address: '',
-    date: ''
-  };
-  const result = validateFields(data);
-  expect(result).toEqual({
-    success: false,
-    errors: {
-      gallons: 'Gallons is required',
-      address: 'Address is required',
-      date: 'Delivery date is required'
-    }
+const app = express();
+app.use(bodyParser.json());
+app.use('/fuelQuotes', fuelQuotesRouter);
+
+describe('fuelQuotesRouter', () => {
+  describe('POST /', () => {
+    test('should return a 200 response with a message when all required fields are provided', async () => {
+      const res = await request(app)
+        .post('/fuelQuotes')
+        .send({
+          gallons: 100,
+          address: '123 Main St',
+          deliveryDate: '2023-04-01',
+          pricePerGallon: 2.50
+        });
+      
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toHaveProperty('message');
+    });
+
+    test('should return a 400 response with an error message when a required field is missing', async () => {
+      const res = await request(app)
+        .post('/fuelQuotes')
+        .send({
+          gallons: 100,
+          address: '123 Main St',
+          pricePerGallon: 2.50
+        });
+
+      expect(res.statusCode).toEqual(400);
+      expect(res.body).toHaveProperty('error');
+    });
   });
-});
 
-it('should return an error for invalid fields', () => {
-  const data = {
-    gallons: 'abc',
-    address: '123 Main St',
-    date: '2023-04-31'
-  };
-  const result = validateFields(data);
-  expect(result).toEqual({
-    success: false,
-    errors: {
-      gallons: 'Gallons must be a number greater than 0',
-      address: 'Address must be a valid string',
-      date: 'Delivery date must be a valid date in YYYY-MM-DD format'
-    }
+  describe('GET /fuelQuotes', () => {
+    test('should return the user inputs as JSON', async () => {
+      const res = await request(app)
+        .get('/fuelQuotes')
+        .send({
+          gallons: 100,
+          address: '123 Main St',
+          deliveryDate: '2023-04-01',
+          pricePerGallon: 2.50
+        });
+
+      expect(res.statusCode).toEqual(200);
+      expect(res.body).toEqual({
+        gallons: 100,
+        address: '123 Main St',
+        deliveryDate: '2023-04-01',
+        pricePerGallon: 2.50
+      });
+    });
   });
-});
-
-it('should return success for valid fields', () => {
-  const data = {
-    gallons: '100',
-    address: '123 Main St',
-    date: '2023-04-01'
-  };
-  const result = validateFields(data);
-  expect(result).toEqual({
-    success: true,
-    errors: {}
-  });
-});
-
-it('should return false for invalid field status', () => {
-  const data = {
-    success: false,
-    errors: {
-      gallons: 'Gallons must be a number greater than 0',
-      address: 'Address must be a valid string',
-      date: 'Delivery date must be a valid date in YYYY-MM-DD format'
-    }
-  };
-  const result = checkFieldStatus(data);
-  expect(result).toEqual(false);
-});
-
-it('should return true for valid field status', () => {
-  const data = {
-    success: true,
-    errors: {}
-  };
-  const result = checkFieldStatus(data);
-  expect(result).toEqual(true);
 });
 

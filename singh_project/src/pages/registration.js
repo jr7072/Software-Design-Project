@@ -36,7 +36,7 @@ const Registration = () => {
                     </button> */}
 
 
-                    <a href="../login/"
+                    <a href="../#/"
                         class="rounded-lg bg-yellow-600 px-3 py-2 text-white transition hover:bg-red-700 items-center">Submit
 
                     </a>
@@ -50,7 +50,7 @@ const Registration = () => {
 
                     <div class="text-center text-grey-dark mt-6">
                         Already have an account? 
-                        <a class="no-underline border-b border-blue text-blue" href="../login/"> Log in
+                        <a class="no-underline border-b border-blue text-blue" href="../#/"> Log in
                         </a>.
                     </div>
                 </div>

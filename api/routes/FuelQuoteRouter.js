@@ -1,57 +1,22 @@
 const express = require('express');
 const router = express.Router();
 
+router.post('/', (req, res) => {
+  console.log('Inside fuelQuote post request handler');
+  const { gallons, address, deliveryDate, pricePerGallon } = req.body;
 
-// GET route for retrieving fuel quote data based on user ID
-router.get('/:id/fuel-quotes', (req, res) => {
-  try {
-    const id = req.params.id;
-    const userQuotes = fuelQuotesDB.filter(quote => quote.userId === id);
-    const json_data = JSON.stringify(userQuotes);
-    res.status(200).send(json_data);
-  } catch (error) {
-    const data = {
-      error: error.message
-    }
-    const json_data = JSON.stringify(data);
-    res.status(400).send(json_data);
+  console.log('User inputs:', req.body); 
+  
+  if (!gallons || !address || !deliveryDate || !pricePerGallon) {
+    res.status(400).json({ error: 'Missing required fields' });
+    return;
   }
+
+  res.json({ message: 'Received userInputs from frontend' });
 });
 
-// POST route for creating a new fuel quote
-router.post('/:id/fuel-quotes', (req, res) => {
-  try {
-    // Get data from request body
-    const { gallons, address, date } = req.body;
-    
-    // Validate data
-    const dataResults = validateFields(req.body);
-    const passed = checkFieldStatus(dataResults);
-
-    if (!passed) {
-      res.status(400).send(dataResults);
-      return;
-    }
-
-    // Store data in database
-    const quote = {
-      userId: req.params.id,
-      gallons,
-      address,
-      date
-    };
-    fuelQuotesDB.push(quote);
-
-    // Send response
-    const json_data = JSON.stringify(quote);
-    res.status(201).send(json_data);
-  } catch (error) {
-    const data = {
-      error: error.message
-    }
-    const json_data = JSON.stringify(data);
-    res.status(400).send(json_data);
-  }
+router.get('/', (req, res) => {
+  res.json(req.body);
 });
 
 module.exports = router;
