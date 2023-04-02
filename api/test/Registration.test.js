@@ -1,4 +1,4 @@
-const {hashCode, fetchUserAuthData } = require('../controllers/LoginController');
+const {hashCode, fetchUserAuthData } = require('../controllers/RegistrationController');
 const {authDB} = require('../models/UserDB');
 
 jest.mock('../models/UserDB');
