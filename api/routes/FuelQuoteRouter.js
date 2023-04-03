@@ -1,10 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const firebase = require('firebase');
-const firebaseConfig = require('./firebaseConfig'); //
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
 
 router.post('/', (req, res) => {
   console.log('Inside fuelQuote post request handler');

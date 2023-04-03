@@ -16,19 +16,7 @@ it('should return user data by id', async () => {
     
   //mock database call
   getUsers.mockReturnValue(
-    [
-      {
-        "id": 1,
-        "firstName": "John",
-        "lastName": "Doe",
-        "addressLine1": "123 Main St",
-        "addressLine2": null,
-        "city": "Anytown",
-        "state": "CA",
-        "zipCode": "12345"
-    },
     {
-        "id": 2,
         "firstName": "Jane",
         "lastName": "Smith",
         "addressLine1": "456 Elm St",
@@ -37,21 +25,9 @@ it('should return user data by id', async () => {
         "state": "TX",
         "zipCode": "67890"
     },
-    {
-        "id": 3,
-        "firstName": "Bob",
-        "lastName": "Johnson",
-        "addressLine1": "789 Oak St",
-        "addressLine2": null,
-        "city": "Othercity",
-        "state": 'TX',
-        "zipCode": "24680"
-    },
-    ]     
   );
 
   const expected = {
-    "id": 2,
     "firstName": "Jane",
     "lastName": "Smith",
     "addressLine1": "456 Elm St",
@@ -71,18 +47,7 @@ it('should return user data by id', async () => {
 it("throws error if user doesn't exist", async () => {
 
   getUsers.mockReturnValue(
-    [
-      {
-        "id": 1,
-        "firstName": "John",
-        "lastName": "Doe",
-        "addressLine1": "123 Main St",
-        "addressLine2": null,
-        "city": "Anytown",
-        "state": "CA",
-        "zipCode": "12345"
-      }
-    ]
+    null
   );
 
   await expect(() => getUserData(2)).toThrow("User doesn't exist");
@@ -357,3 +322,4 @@ it("detects that a field is invalid", () => {
 
   expect(result).toBeFalsy();
 })
+

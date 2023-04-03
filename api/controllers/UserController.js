@@ -3,14 +3,13 @@ const {getUsers} = require('../models/UserDB');
 
 
 const getUserData = (id) => {
-    users = getUsers()
-    user_data = users.filter(users => users.id == id);
+    user = getUsers(id)
 
-    if (user_data.length == 0){
+    if (!user){
         throw new Error("User doesn't exist");
     }
 
-    return user_data[0];
+    return user;
 }
 
 
