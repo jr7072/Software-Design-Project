@@ -1,18 +1,39 @@
 const express = require('express');
 const router = express.Router();
+const firebase = require('firebase');
+const firebaseConfig = require('./firebaseConfig'); //
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
 router.post('/', (req, res) => {
   console.log('Inside fuelQuote post request handler');
-  const { gallons, address, deliveryDate, pricePerGallon } = req.body;
+  const { gallons, address, pricePerGallon } = req.body;
+  const email = req.body.email;
+  const deliveryDate = new Date(req.body.deliveryDate);
+  const deliveryDateStr = deliveryDate.toISOString().split('T')[0];
 
-  console.log('User inputs:', req.body); 
-  
-  if (!gallons || !address || !deliveryDate || !pricePerGallon) {
+  if (!email || !gallons || !address || !deliveryDateStr || !pricePerGallon) {
     res.status(400).json({ error: 'Missing required fields' });
+    console.log('missing a variable');
     return;
   }
 
-  res.json({ message: 'Received userInputs from frontend' });
+  try {
+    const newFuelQuoteRef = db.ref('fuelQuotes').push();
+    newFuelQuoteRef.set({
+      email,
+      gallons,
+      address,
+      deliveryDate: deliveryDateStr,
+      pricePerGallon
+    });
+    console.log(`Fuel quote inserted into Realtime Database with key: ${newFuelQuoteRef.key}`);
+    res.status(200).json({ message: 'Fuel quote inserted into database' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 router.get('/', (req, res) => {
@@ -20,3 +41,4 @@ router.get('/', (req, res) => {
 });
 
 module.exports = router;
+
