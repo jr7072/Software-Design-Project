@@ -39,3 +39,5 @@ singh_project/.env*.local
 
 # vercel
 singh_project/.vercel
+
+.env.local
