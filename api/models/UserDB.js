@@ -57,6 +57,23 @@ const getUsers = () => {
     ];      
 }
 
+const authDB = () => {  
+    return [
+        {
+            "username": "john123",
+            "hash": ""
+        },
+        {
+            "username": "jane!",
+            "hash": ""
+        },
+        {
+            "username": "bobross",
+            "hash": ""
+        }
+    ];
+}
+
 
 const updateUser = (id, data) => {
     return -1;
@@ -77,5 +94,6 @@ module.exports = {
     getUsers,
     updateUser,
     createUser,
-    deleteUser
+    deleteUser,
+    authDB
 };

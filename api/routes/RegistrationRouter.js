@@ -2,18 +2,20 @@ const express = require('express');
 const router = express.Router();
 
 //internal modules
-const {hashCode, fetchUserAuthData} = require('../controllers/LoginController');
+const {hashCode, fetchUserAuthData} = require('../controllers/RegistrationController');
 
 // middleware here
 
 //routes here
 
-router.get('/:login', (req, res) => {
+router.get('/:register', (req, res) => {
     try {
 
         const username = req.params.username;
         const password = req.params.password;
         const data = fetchUserAuthData(username, password);
+
+        // NEEDS TO CHECK IF USER AUTH IS CORRECT
 
         const json_data = JSON.stringify(data);
         res.status(200).send(json_data);
