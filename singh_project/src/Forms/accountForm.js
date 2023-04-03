@@ -90,7 +90,7 @@ const AccountForm = () => {
       const status = await response.status;
 
       // handle http accepted but not successful
-      if (status !== 204){
+      if (status !== 200){
         throw(`resource not updated returned ${status}`);
       }
 

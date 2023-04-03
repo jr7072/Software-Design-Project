@@ -1,9 +1,13 @@
 // user functions
-const {getUsers} = require('../models/UserDB');
+const {
+    getUsers,
+    updateUser
+} = require('../models/UserDB');
 
 
-const getUserData = (id) => {
-    user = getUsers(id)
+const getUserData = async (id) => {
+    
+    user = await getUsers(id)
 
     if (!user){
         throw new Error("User doesn't exist");
@@ -13,27 +17,26 @@ const getUserData = (id) => {
 }
 
 
-const updateUserData = (id, data) => {
+const updateUserData = async (id, data) => {
     
-    users = getUsers() 
-    user_data = users.filter(users => users.id == id);
+    user = await getUsers(id);
 
-    if (user_data.length == 0) {
+    if (!user) {
         throw new Error("User doesn't exist");
     }
-
-    user_object = user_data[0];
   
     for (const [key, value] of Object.entries(data)){
         
-        if (!user_object.hasOwnProperty(key)){
+        if (!user.hasOwnProperty(key)){
             throw new Error(`Invalid field: ${key}`);
         }
 
-        user_object[key] = value;
+        user[key] = value;
     }
 
-    return user_object;
+    await updateUser(id, user);
+
+    return user;
 }
 
 const validateFields = (proposedData) => {

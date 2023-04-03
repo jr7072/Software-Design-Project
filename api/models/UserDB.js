@@ -3,11 +3,10 @@ const { db } = require('../db/firebase_util.js');
 
 const getUsers = async (id) => {  
 
-    const usersRef = db.ref(`users/${id}`);
-    const snapshot = await usersRef.once("value");
+    const userRef = db.ref(`users/${id}`);
+    const snapshot = await userRef.once("value");
     const users = snapshot.val();
     return users;
-
 }
 
 
@@ -30,7 +29,8 @@ const authDB = () => {
 
 
 const updateUser = (id, data) => {
-    return -1;
+    userRef = db.ref(`users/${id}`);
+    userRef.update(data);
 }
 
 

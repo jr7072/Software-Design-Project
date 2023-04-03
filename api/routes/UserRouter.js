@@ -14,26 +14,26 @@ const {
 
 // routes here
 router.get('/:id', (req, res) => {
-    try {
 
         const id = req.params.id;
-        const data = getUserData(id);
-        const json_data = JSON.stringify(data);
-        res.status(200).send(json_data);
+        
+        //database call
+        getUserData(id).then((data => {
+            const json_data = JSON.stringify(data);
+            res.status(200).send(json_data);
+        })).catch(error => {
+            const data = {
+                error: error.message
+            }
+            const json_data = JSON.stringify(data);
+            res.status(400).send(json_data);
+        });
 
-    } catch (error) {
-
-        const data = {
-            error: error.message
-        }
-        const json_data = JSON.stringify(data);
-        res.status(400).send(json_data);
-    
-    }
 })
 
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
+    
     try {
 
         // get data
@@ -53,9 +53,10 @@ router.put('/:id', (req, res) => {
         }
 
         // update if passed
-        const updatedData = updateUserData(id, data);
+        const updatedData = await updateUserData(id, data);
         const json_data = JSON.stringify(updatedData);
-        res.status(204).send(json_data); 
+
+        res.status(200).send(json_data); 
 
     } catch (error) {
 
