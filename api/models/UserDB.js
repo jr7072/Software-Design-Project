@@ -57,21 +57,23 @@ const getUsers = () => {
     ];      
 }
 
-const authDB = () => {  
-    return [
-        {
-            "username": "john123",
-            "hash": ""
-        },
-        {
-            "username": "jane!",
-            "hash": ""
-        },
-        {
-            "username": "bobross",
-            "hash": ""
-        }
-    ];
+var mockDB = [
+    {
+        "username": "john123",
+        "hash": ""
+    },
+    {
+        "username": "jane!",
+        "hash": ""
+    },
+    {
+        "username": "bobross",
+        "hash": ""
+    }
+];
+
+const authDB = () => {
+    return mockDB;
 }
 
 
@@ -81,6 +83,9 @@ const updateUser = (id, data) => {
 
 
 const createUser = (data) => {
+    //For Sam:
+    //Need to make it so data is appended to the database when a new user registers
+    mockDB.push(data);
     return -1;
 }
 

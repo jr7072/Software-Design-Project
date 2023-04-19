@@ -12,24 +12,37 @@ function hashCode(str) {
 }
 
 const fetchUserAuthData = (username, password) => {
+
+    console.log(username);
+    console.log(password);
     
     users = authDB();
     user_data = users.filter(users => users.username == username);
 
     if (user_data.length == 0) {
-        throw new Error("User doesn't exist");
+        throw new Error("Database Entry Error");
     }
 
-    user_object = user_data[0]; //user_object.username or user_object.hash
-    
-    if (password !== user_object.hash) {
-        throw new Error("Wrong Password");
-    }
+    user_object = user_data[0]; //user_object.username or user_object.password
+    console.log(user_data);
 
     return user_object;
 }
 
+const usernameNotTaken = (username) => {
+    
+    users = authDB();
+    user_data = users.filter(users => users.username == username);
+
+    if (user_data.length != 0) {
+        throw new Error("User already exists");
+    }
+
+    return true;
+}
+
 module.exports = {
     hashCode,
-    fetchUserAuthData
+    fetchUserAuthData,
+    usernameNotTaken
 }

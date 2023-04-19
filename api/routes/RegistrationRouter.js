@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 //internal modules
-const {hashCode, fetchUserAuthData} = require('../controllers/RegistrationController');
+const {hashCode, usernameNotTaken, fetchUserAuthData} = require('../controllers/RegistrationController');
+const {createUser} = require('../models/UserDB');
 
 // middleware here
 
@@ -11,11 +12,21 @@ const {hashCode, fetchUserAuthData} = require('../controllers/RegistrationContro
 router.get('/:register', (req, res) => {
     try {
 
+        //Input given by the user
         const username = req.params.username;
         const password = req.params.password;
-        const data = fetchUserAuthData(username, password);
 
-        // NEEDS TO CHECK IF USER AUTH IS CORRECT
+        //Check to see if username is already taken
+            //If taken, throw exception
+        if (usernameNotTaken(username)) {
+            var data = {
+                "username": username,
+                "hash": hashCode(password) //Convert password to hash
+            };
+            createUser(data); //Add user and hash to database as a new entry
+        }
+
+        const data = fetchUserAuthData(username, password); //If error thrown, then "Database Entry Error"
 
         const json_data = JSON.stringify(data);
         res.status(200).send(json_data);
