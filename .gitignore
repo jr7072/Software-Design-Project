@@ -39,3 +39,8 @@ singh_project/.env*.local
 
 # vercel
 singh_project/.vercel
+
+.env.local
+
+# db account keys
+api/software-design-fuel-quote-firebase-adminsdk-47fpx-bbba432ff7.json

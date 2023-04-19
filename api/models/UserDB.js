@@ -1,91 +1,42 @@
-// database funtions
-// we will build this out later
+const { db } = require('../db/firebase_util.js');
 
 
-const getUsers = () => {  
-    return [
-        {
-            "id": 1,
-            "firstName": "John",
-            "lastName": "Doe",
-            "addressLine1": "123 Main St",
-            "addressLine2": null,
-            "city": "Anytown",
-            "state": "CA",
-            "zipCode": "12345"
-        },
-        {
-            "id": 2,
-            "firstName": "Jane",
-            "lastName": "Smith",
-            "addressLine1": "456 Elm St",
-            "addressLine2": "Apt 2B",
-            "city": "Somecity",
-            "state": "TX",
-            "zipCode": "67890"
-        },
-        {
-            "id": 3,
-            "firstName": "Bob",
-            "lastName": "Johnson",
-            "addressLine1": "789 Oak St",
-            "addressLine2": null,
-            "city": "Othercity",
-            "state": "WA",
-            "zipCode": "24680"
-        },
-        {
-            "id": 4,
-            "firstName": "Sarah",
-            "lastName": "Lee",
-            "addressLine1": "432 Park Ave",
-            "addressLine2": "Suite 100",
-            "city": "Bigcity",
-            "state": "AL",
-            "zipCode": "54321"
-        },
-        {
-            "id": 5,
-            "firstName": "Mike",
-            "lastName": "Smith",
-            "addressLine1": "321 Maple St",
-            "addressLine2": "Unit 5",
-            "city": "Smalltown",
-            "state": "FL",
-            "zipCode": "13579"
-        }
-    ];      
+const getUsers = async (id) => {  
+
+    const userRef = db.ref(`users/${id}`);
+    const snapshot = await userRef.once("value");
+    const users = snapshot.val();
+    return users;
 }
 
-var mockDB = [
-    {
-        "username": "john123",
-        "hash": ""
-    },
-    {
-        "username": "jane!",
-        "hash": ""
-    },
-    {
-        "username": "bobross",
-        "hash": ""
-    }
-];
 
-const authDB = () => {
-    return mockDB;
+const authDB = () => {  
+    return [
+        {
+            "username": "john123",
+            "hash": ""
+        },
+        {
+            "username": "jane!",
+            "hash": ""
+        },
+        {
+            "username": "bobross",
+            "hash": ""
+        }
+    ];
 }
 
 
 const updateUser = (id, data) => {
-    return -1;
+    userRef = db.ref(`users/${id}`);
+    userRef.update(data);
 }
 
 
 const createUser = (data) => {
     //For Sam:
     //Need to make it so data is appended to the database when a new user registers
-    mockDB.push(data);
     return -1;
 }
 
