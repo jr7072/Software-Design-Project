@@ -1,40 +1,71 @@
+// const express = require('express');
+// const router = express.Router();
+// const validate = require('../controllers/FuelController')
+// const { db } = require('../db/firebase_util.js');
+
+// router.post('/', (req, res) => {
+//   console.log('Inside fuelQuote post request handler');
+//   const { gallons, address, date, price } = req.body;
+
+//   console.log('User inputs:', req.body);
+//   // ///
+//   // const errors = validate(gallons, address, date);
+//   // if (Object.keys(errors).length > 0) {
+//   //   res.status(400).json({ errors });
+//   //   return;
+//   // }
+//   // ///
+ 
+//   if (!gallons || !address || !date || !price) {
+//     res.status(400).json({ error: 'Missing required fields' });
+//     return;
+//   }
+
+//   res.json({ message: 'Received userInputs from frontend' });
+// });
+
+// router.get('/', (req, res) => {
+//   res.json(req.body);
+// });
+
+// module.exports = router;
+
 const express = require('express');
 const router = express.Router();
+const validate = require('../controllers/FuelController')
+const { db } = require('../db/firebase_util.js');
 
 
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   console.log('Inside fuelQuote post request handler');
-  const { gallons, address, pricePerGallon } = req.body;
-  const email = req.body.email;
-  const deliveryDate = new Date(req.body.deliveryDate);
-  const deliveryDateStr = deliveryDate.toISOString().split('T')[0];
+  const { gallons, address, date, price } = req.body;
 
-  if (!email || !gallons || !address || !deliveryDateStr || !pricePerGallon) {
+  console.log('User inputs:', req.body);
+
+  if (!gallons || !address || !date || !price) {
     res.status(400).json({ error: 'Missing required fields' });
-    console.log('missing a variable');
     return;
   }
 
   try {
-    const newFuelQuoteRef = db.ref('fuelQuotes').push();
-    newFuelQuoteRef.set({
-      email,
+    const docRef = await db.collection('fuel').add({
       gallons,
       address,
-      deliveryDate: deliveryDateStr,
-      pricePerGallon
+      date,
+      price
     });
-    console.log(`Fuel quote inserted into Realtime Database with key: ${newFuelQuoteRef.key}`);
-    res.status(200).json({ message: 'Fuel quote inserted into database' });
+    console.log('Document written with ID: ', docRef.id);
+    res.json({ message: 'Received userInputs from frontend and added to Firebase' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('Error adding document: ', error);
+    res.status(500).json({ error: 'Error adding document to Firebase' });
   }
 });
+
 
 router.get('/', (req, res) => {
   res.json(req.body);
 });
 
-module.exports = router;
 
+module.exports = router;
