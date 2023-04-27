@@ -1,45 +1,14 @@
-// const express = require('express');
-// const router = express.Router();
-// const validate = require('../controllers/FuelController')
-// const { db } = require('../db/firebase_util.js');
-
-// router.post('/', (req, res) => {
-//   console.log('Inside fuelQuote post request handler');
-//   const { gallons, address, date, price } = req.body;
-
-//   console.log('User inputs:', req.body);
-//   // ///
-//   // const errors = validate(gallons, address, date);
-//   // if (Object.keys(errors).length > 0) {
-//   //   res.status(400).json({ errors });
-//   //   return;
-//   // }
-//   // ///
- 
-//   if (!gallons || !address || !date || !price) {
-//     res.status(400).json({ error: 'Missing required fields' });
-//     return;
-//   }
-
-//   res.json({ message: 'Received userInputs from frontend' });
-// });
-
-// router.get('/', (req, res) => {
-//   res.json(req.body);
-// });
-
-// module.exports = router;
-
 const express = require('express');
 const router = express.Router();
 const validate = require('../controllers/FuelController')
 const { db } = require('../db/firebase_util.js');
 
 
-router.post('/', async (req, res) => {
+router.post('/:fuelId', async (req, res) => {
+  
   console.log('Inside fuelQuote post request handler');
   const { gallons, address, date, price } = req.body;
-
+  const fuelId = req.params.userId;
   console.log('User inputs:', req.body);
 
   if (!gallons || !address || !date || !price) {
@@ -48,7 +17,7 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    const docRef = await db.collection('fuel').add({
+    const docRef = await db.ref(`fuel/${fuelId}`).push({
       gallons,
       address,
       date,

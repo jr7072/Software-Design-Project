@@ -6,6 +6,7 @@ import axios, { AxiosError, HttpStatusCode } from 'axios'
 
 
 // fuel quote page
+const user_id = 1;
 
 const FuelQuote = () => {
     const [gallons, setGallons] = useState("");
@@ -16,7 +17,7 @@ const FuelQuote = () => {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         try {
-          const response = await axios.post('http://localhost:3000/api', {gallons, address, date,price});
+          const response = await axios.post(`http://localhost:3080/fuelquote`, {gallons, address, date,price});
           setPrice(response.data.price);
         } catch (error) {
           console.error(error);
@@ -110,6 +111,7 @@ const FuelQuote = () => {
                         <button     
                             htmlFor ='price'
                             type='submit'
+                            onClick={handleFormSubmit}
                             class="rounded-lg bg-yellow-600 mt-6 px-3 py-2 text-white transition hover:bg-red-700">
                                 Save
                         </button>
