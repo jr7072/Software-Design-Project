@@ -5,6 +5,10 @@ import Image from 'next/image'
 export default function FuelQuote(){
     return(
 
+        //keep background 
+        //get rid of the dropdown for the address
+        //change the color of the button
+        //add a price button
 
         <div class = "flex h-screen w-screen">
             <div class="flex-1 bg-quoteForm bg-cover bg-center bg-no-repeat">
@@ -33,12 +37,11 @@ export default function FuelQuote(){
                         class="block border border-grey-light w-full p-3 rounded mb-4"
                         name="gallons"
                         placeholder="Gallons" />
-
-                        <label for="countries" class="block mb-2 text-sm font-inter font-bold text-gray-900 dark:text-white">Address:</label>
-                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-3 mb-5 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected>Choose an Address</option>
-                            <option selected>4400 University Dr, Houston, TX 77004</option>
-                        </select>
+                        
+                    
+                        <label for="user address" class="block mb-2 text-sm font-inter font-bold text-gray-900 dark:text-white">Address:</label> 
+                        <input type="address" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-3 mb-5 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 " placeholder="Address"></input>
+                            
                         
                         <label for="date" class="block mb-2 text-sm font-bold text-gray-900 font-inter dark:text-white">Date of Delivery:</label>
                         <input 
@@ -48,8 +51,9 @@ export default function FuelQuote(){
                         name="date"
                         placeholder="Month/Day/Year" />
 
+                        <button class="mt-1 w-full bg-yellow-600 font-semibold text-center text-white py-2 rounded-md tracking-wide">Calculate!</button>
 
-                        <label for="price" class="block mb-2 text-sm font-bold text-gray-900 dark:text-white mt-9 font-inter">Price:</label>
+                        <label for="price" class="block mb-2 text-sm font-bold text-gray-900 dark:text-white font-inter">Price:</label>
                         <div class="mt-1 w-full bg-gray-100 font-semibold text-center text-gray-300 py-2 rounded-md  tracking-wide">Price</div>
 
                         <button class="rounded-lg bg-yellow-600 mt-6 px-3 py-2 text-white transition hover:bg-red-700">Save</button>

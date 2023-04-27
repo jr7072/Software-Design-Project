@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-
 router.post('/', (req, res) => {
   console.log('Inside fuelQuote post request handler');
   const { gallons, address, pricePerGallon } = req.body;
