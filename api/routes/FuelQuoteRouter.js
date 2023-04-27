@@ -7,7 +7,7 @@ const { db } = require('../db/firebase_util.js');
 router.post('/:fuelId', async (req, res) => {
   console.log('Inside fuelQuote post request handler');
   const { gallons, address, date, price } = req.body;
-  const fuelId = req.params.userId;
+  const fuelId = req.params.fuelId;
   console.log('User inputs:', req.body);
 
   if (!gallons || !address || !date || !price) {

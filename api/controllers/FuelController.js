@@ -1,3 +1,5 @@
+const {getAuth} = require('../models/UserDB');
+
 const validate = (gallons, address, date) => {
     let errors = {};
   
@@ -11,8 +13,6 @@ const validate = (gallons, address, date) => {
       errors.address = 'Address is required';
     }
 
-    
-  
     if (!date) {
       errors.date = 'Date is required';
     } else {
@@ -27,3 +27,28 @@ const validate = (gallons, address, date) => {
     return errors;
   };
   
+
+
+
+
+
+  const checkFieldStatus = (fieldResults) => {
+    
+    let status = true
+
+    for (const fieldStatus of Object.values(fieldResults)){
+
+        const valid = fieldStatus.valid;
+
+        if (!valid){
+            status = false;
+        }
+
+    }
+
+    return status
+}
+
+module.exports = {
+  checkFieldStatus
+}
