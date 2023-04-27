@@ -1,12 +1,12 @@
 const {hashCode, fetchUserAuthData } = require('../controllers/LoginController');
-const {authDB} = require('../models/UserDB');
+const {getAuth} = require('../models/UserDB');
 
 jest.mock('../models/UserDB');
 
 it('checks if username and password is correct', async () => {
     
   //mock database call
-  authDB.mockReturnValue(
+  getAuth.mockReturnValue(
     [
       {
           "username": "john123",
@@ -20,7 +20,7 @@ it('checks if username and password is correct', async () => {
           "username": "bobross",
           "hash": "222"
       }
-    ]     
+    ]
   );
 
   const expected = {
@@ -37,7 +37,7 @@ it('checks if username and password is correct', async () => {
 it('throws error if username does not exist', async () => {
   
   //mock database call
-  authDB.mockReturnValue(
+  getAuth.mockReturnValue(
     [
       {
           "username": "john123",
@@ -53,7 +53,7 @@ it('throws error if username does not exist', async () => {
 it('throws error if password is incorrect', async () => {
   
   //mock database call
-  authDB.mockReturnValue(
+  getAuth.mockReturnValue(
     [
       {
           "username": "john123",

@@ -1,39 +1,28 @@
-const {hashCode, fetchUserAuthData} = require('../controllers/RegistrationController');
-const {authDB} = require('../models/UserDB');
+const {fetchAuth} = require('../controllers/RegistrationController');
+const {getAuth} = require('../models/UserDB');
 
 jest.mock('../models/UserDB');
 
 //Test for adding a user to the db
 
-it('adds user to db', async () => {
-    
-    //mock database call
-    authDB.mockReturnValue(
-      [
-        {
-            "username": "john123",
-            "password": "123"
-        },
-        {
-            "username": "jane!",
-            "password": "111"
-        },
-        {
-            "username": "bobross",
-            "password": "222"
-        }
-      ]     
-    );
-  
-    const expected = {
-        "username": "john123",
-        "hash": hashCode("123")
-    };
-    
-    const result = await fetchUserAuthData("john123", "123");
-    
-    expect(result).toStrictEqual(expected);
-  
-  })
+it('fetch user auth from db', async () => {
+
+  getAuth.mockReturnValue(
+    {
+      "hash": "",
+      "username": "person1"
+    }
+  );
+
+  const expected = {
+    "hash": "",
+    "username": "person1"
+  };
+
+  const data = await fetchAuth(1);
+
+  expect(data).toStrictEqual(expected);
+
+})
 
 //Test for attempting to add a user when username is already taken
