@@ -14,15 +14,24 @@ const FuelQuote = () => {
     const [price, setPrice] = useState(2.5);
 
 
-    const handleFormSubmit = async (e) => {
-        e.preventDefault();
-        try {
-          const response = await axios.post(`http://localhost:3080/fuel`, {gallons, address, date,price});
-          setPrice(response.data.price);
+    const upload_fuel_data = async() => {
+        
+        try{
+            const response = await axios.post(`http://localhost:3080/fuelquote/${user_id}`, {gallons, address, date, price});
+            const json_response = await response.data;
+
+            setPrice(json_response.price);
+
         } catch (error) {
-          console.error(error);
+            console.log(error);
         }
-    };
+    }
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        console.log("hello");
+        upload_fuel_data();
+    }
    
     return(
 
@@ -30,7 +39,7 @@ const FuelQuote = () => {
         //keep background
         //get rid of the dropdown for the address
         //change the color of the button
-        <form onSubmit={handleFormSubmit}>
+        <form>
         <div class = "flex h-screen w-screen">
             <div class="flex-1 bg-quoteForm bg-cover bg-center bg-no-repeat">
             <div class="sm:px-12 mx-auto flex items-center justify-between p-4 ">
