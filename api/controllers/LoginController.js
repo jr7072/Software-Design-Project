@@ -15,7 +15,9 @@ function hashCode(str) {
 //Gets the user authentication data that matches the username from the get request
 //If no matching username is found in db, then "Username is incorrect"
 //If hash does not match, then "Password is incorrect"
-const fetchUserAuthData = async (username, hash) => {
+const fetchUserAuthData = async (username, password) => {
+
+    const hash = hashCode(password); //generate hash code
     
     user = await getAuth(username);
 

@@ -16,9 +16,8 @@ router.get('/login', async (req, res) => {
         if (username == undefined || password == undefined) {
             throw new Error("Invalid params");
         }
-
-        const hash = hashCode(password); //generate hash code
-        const data = await fetchUserAuthData(username, hash);
+        
+        const data = await fetchUserAuthData(username, password);
 
         const json_data = JSON.stringify(data);
         res.status(200).send(json_data);

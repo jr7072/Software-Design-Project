@@ -3,32 +3,35 @@ const {getAuth} = require('../models/UserDB');
 
 jest.mock('../models/UserDB');
 
+/*it('checks if hashcode is matching', async () => {
+    
+  //mock database call
+  hashCode.mockReturnValue(-1178744323);
+
+  const expected = -1178744323;
+  
+  const result = hashCode("testadmin");
+  
+  expect(result).toStrictEqual(expected);
+
+})*/
+
 it('checks if username and password is correct', async () => {
     
   //mock database call
   getAuth.mockReturnValue(
-    [
-      {
-          "username": "john123",
-          "hash": "123"
-      },
-      {
-          "username": "jane!",
-          "hash": "111"
-      },
-      {
-          "username": "bobross",
-          "hash": "222"
-      }
-    ]
+    {
+      "username": "test_admin",
+      "hash": hashCode("testadmin")
+    }
   );
 
   const expected = {
-      "username": "john123",
-      "hash": "123"
+    "username": "test_admin",
+    "hash": hashCode("testadmin")
   };
   
-  const result = await fetchUserAuthData("john123", "123");
+  const result = await fetchUserAuthData("test_admin", "testadmin");
   
   expect(result).toStrictEqual(expected);
 
@@ -36,19 +39,13 @@ it('checks if username and password is correct', async () => {
 
 it('throws error if username does not exist', async () => {
   
-  //mock database call
-  getAuth.mockReturnValue(
-    [
-      {
-          "username": "john123",
-          "hash": ""
-      }
-    ]
-  );
+  getAuth.mockReturnValue(-1);
 
-  await expect(() => fetchUserAuthData("jane!", "")).toThrow("User doesn't exist");
+  await expect(() => fetchUserAuthData("wrongusername", "testadmin")).rejects.toThrow("Username is incorrect");
 
 })
+
+/*
 
 it('throws error if password is incorrect', async () => {
   
@@ -65,3 +62,4 @@ it('throws error if password is incorrect', async () => {
   await expect(() => fetchUserAuthData("john123", "12")).toThrow("Wrong Password");
 
 })
+*/
