@@ -1,35 +1,36 @@
 const {getAuth} = require('../models/UserDB');
 
-const validate = (gallons, address, date) => {
-    let errors = {};
+function validateFields(proposedData) {
+  const results = {};
   
-    if (!gallons) {
-      errors.gallons = 'Number of Gallons is required';
-    } else if (isNaN(gallons) || gallons <= 0) {
-      errors.gallons = 'Number of Gallons must be a positive number';
+  if (!proposedData.gallons) {
+    results.gallons = 'Gallons field is required';
+  } else if (isNaN(data.gallons) || data.gallons <= 0) {
+    results.gallons = 'Gallons field should be a positive number';
+  }
+  
+  if (!proposedData.address) {
+    results.address = 'Address field is required';
+  }
+  
+  if (!proposedData.date) {
+    results.date = 'Date field is required';
+  } else {
+    const currentDate = new Date();
+    const enteredDate = new Date(data.date);
+    if (enteredDate < currentDate) {
+      results.date = 'Date field should be a future date';
     }
+  }
   
-    if (!address) {
-      errors.address = 'Address is required';
-    }
-
-    if (!date) {
-      errors.date = 'Date is required';
-    } else {
-      const today = new Date();
-      const selectedDate = new Date(date);
+  if (!proposedData.price) {
+    results.price = 'Price field is required';
+  } else if (isNaN(data.price) || data.price <= 0) {
+    results.price = 'Price field should be a positive number';
+  }
   
-      if (selectedDate < today) {
-        errors.date = 'Selected date must be today or later';
-      }
-    }
-  
-    return errors;
-  };
-  
-
-
-
+  return results;
+}
 
 
   const checkFieldStatus = (fieldResults) => {
@@ -50,5 +51,6 @@ const validate = (gallons, address, date) => {
 }
 
 module.exports = {
-  checkFieldStatus
+  checkFieldStatus,
+  validateFields
 }

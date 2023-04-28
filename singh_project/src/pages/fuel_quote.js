@@ -13,7 +13,6 @@ const FuelQuote = () => {
     const [address, setAddress] = useState("");
     const [price, setPrice] = useState(2.5);
 
-
     const upload_fuel_data = async() => {
         
         try{
@@ -108,9 +107,6 @@ const FuelQuote = () => {
                             name="date"
                             placeholder="Month/Day/Year"
                         />
-
-
-
 
                         <label
                             htmlFor="price"
