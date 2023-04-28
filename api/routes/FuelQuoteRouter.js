@@ -61,7 +61,7 @@ router.get('/:id', (req, res) => {
 
 })
 
-router.put('/:id', async (req, res) => {
+router.post('/:id', async (req, res) => {
   // validation call
   const { gallons, address, date, price } = req.body;
  
