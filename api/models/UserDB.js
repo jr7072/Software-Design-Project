@@ -11,6 +11,14 @@ const getUsers = async (id) => {
 }
 
 
+const getUserFuelHistory = async (id) => {
+    const userRef = db.ref(`users/${id}`);
+    const snapshot = await userRef.once("value");
+    const user = snapshot.val();
+    return user.fuelQuote;
+}
+
+
 const getAuth = async (username) => {
     //retrieves Auth object from db
     const authRef = db.ref("Auth");
@@ -94,6 +102,7 @@ const deleteUser = (id) => {
 
 module.exports = {
     getUsers,
+    getUserFuelHistory,
     updateUser,
     createUser,
     deleteUser,

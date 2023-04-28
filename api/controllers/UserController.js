@@ -1,7 +1,8 @@
 // user functions
 const {
     getUsers,
-    updateUser
+    updateUser,
+    getUserFuelHistory
 } = require('../models/UserDB');
 
 
@@ -13,9 +14,19 @@ const getUserData = async (id) => {
         throw new Error("User doesn't exist");
     }
 
+    delete user.fuelQuote;
+
     return user;
 }
 
+const getUserFuelHistoryIds = async (id) => {
+
+    fuelHistoryids = getUserFuelHistory(id);
+
+    delete fuelHistoryids.empty
+
+    return Object.values(fuelHistoryids) 
+}
 
 const updateUserData = async (id, data) => {
     
@@ -34,7 +45,10 @@ const updateUserData = async (id, data) => {
         user[key] = value;
     }
 
+
     await updateUser(id, user);
+
+    delete user.fuelQuote;
 
     return user;
 }
@@ -102,6 +116,7 @@ const checkFieldStatus = (fieldResults) => {
 
 module.exports = {
     getUserData,
+    getUserFuelHistoryIds,
     updateUserData,
     validateFields,
     checkFieldStatus
