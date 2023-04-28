@@ -104,6 +104,9 @@ const FuelQuote = ( { cookies }) => {
                             name="gallons"
                             placeholder="Gallons"
                             onChange={(e) => setGallons(e.target.value)}
+                            min = "0"
+                            step = "any"
+                            required
                         />
                        
                         <input

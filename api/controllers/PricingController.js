@@ -55,6 +55,10 @@ function priceCalculation(Gallons, Address, fuelHistory){
     const suggested = basePrice + margin;
 
     const totalAmountDue = suggested * Gallons;
+
+    if(totalAmountDue < 0){
+        return 'error';
+    }
     //this is the total amount due
     return totalAmountDue;
 
