@@ -6,8 +6,9 @@
 // import axios, { AxiosError, HttpStatusCode } from 'axios'
 
 import { useEffect, useState } from 'react';
+import { parseCookies } from '@/helpers/parseCookie';
 
-const FuelQuoteHistory = () => {
+const FuelQuoteHistory = ( { cookies } ) => {
     const [quoteHistory, setQuoteHistory] = useState([]);
     useEffect(() => {
         const fetchQuoteHistory = async () => {
@@ -89,6 +90,22 @@ const FuelQuoteHistory = () => {
         </div>
         </div>
     )
+}
+
+FuelQuoteHistory.getInitialProps = async ({ req, res }) => {
+    
+    const data = parseCookies(req)
+    
+    if (res) {
+      if (Object.keys(data).length === 0 && data.constructor === Object) {
+        res.writeHead(301, { Location: "/" })
+        res.end()
+      }
+    }
+    
+    return {
+      cookies: data && data,
+    }
 }
 
 export default FuelQuoteHistory;

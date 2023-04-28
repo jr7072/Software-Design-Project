@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from "react"
 import { useRouter } from "next/router"
 import axios, { AxiosError, HttpStatusCode } from 'axios'
+import { useCookies } from "react-cookie"
 
 //form initial state
 const initialState = {
@@ -24,6 +25,7 @@ const reducer = (state, action) => {
 
 const Registration = () => {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const [cookie, setCookie] = useCookies(['user']);
     const router = useRouter();
 
     //console.log(state);
@@ -43,12 +45,19 @@ const Registration = () => {
             if (status !== 200){
                 throw(`resource not updated returned ${status}`);
             }
+            
+            const user_data = await response.data
+  
+            setCookie("user", JSON.stringify(user_data.id), {
+                    path: "/",
+                    maxAge: 3600, // Expires after 1hr
+                    sameSite: true,
+            });
 
             // push route if successful
             router.push('/account');
 
         }catch(error){
-            console.log(error.response.data);
 
             // looking only for axios error
             if (error instanceof AxiosError){
