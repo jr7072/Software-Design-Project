@@ -38,7 +38,7 @@
 
 // module.exports = router;
 
-import { pricingCalculator } from '../controllers/PricingController';
+import { priceCalculation } from '../controllers/PricingController';
 const express = require('express');
 const router = express.Router();
 const {validateFields, checkFieldStatus} = require('../controllers/FuelController')
@@ -70,6 +70,10 @@ router.post('/:id', async (req, res) => {
     res.status(400).json({ error: 'Missing required fields' });
     return;
   }
+
+  //calling the pricing function, I think I did it right
+  price = priceCalculation(gallons, address);
+
 
   try {
     const id = req.params.id;
