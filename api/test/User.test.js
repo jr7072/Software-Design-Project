@@ -2,15 +2,15 @@
 
 const {
   getUserData,
+  getUserFuelHistoryIds,
   updateUserData,
   validateFields,
   checkFieldStatus  
 } = require('../controllers/UserController');
 
-const {getUsers} = require('../models/UserDB');
+const {getUsers, getUserFuelHistory} = require('../models/UserDB');
 
 jest.mock('../models/UserDB');
-
 
 it('should return user data by id', async () => {
     
@@ -303,3 +303,20 @@ it("detects that a field is invalid", () => {
   expect(result).toBeFalsy();
 })
 
+
+it("returns the array of fuelQuote ids", async () => {
+  
+  getUserFuelHistory.mockReturnValue(
+    {
+      1: 1234,
+      2: 1235,
+      3: 1236
+    }
+  );
+
+  const expected = [1234, 1235, 1236];
+
+  const result = await getUserFuelHistoryIds(1);
+
+  expect(result).toStrictEqual(expected);
+})
