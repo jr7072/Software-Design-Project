@@ -1,7 +1,6 @@
 const { v1 } = require('uuid');
 const { db } = require('../db/firebase_util.js');
 
-
 const getUsers = async (id) => {  
 
     const userRef = db.ref(`users/${id}`);
