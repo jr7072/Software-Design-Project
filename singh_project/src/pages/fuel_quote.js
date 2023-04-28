@@ -13,7 +13,7 @@ const FuelQuote = ( { cookies }) => {
     const [gallons, setGallons] = useState("");
     const [date, setDate] = useState("");
     const [address, setAddress] = useState("");
-    const [price, setPrice] = useState(2.5);
+    const [price, setPrice] = useState(null);
 
     const user_id = cookies.user.slice(1, -1);
 
@@ -47,7 +47,7 @@ const FuelQuote = ( { cookies }) => {
     }
 
     const getFuelPrice = async() => {
-
+        setPrice(null);
         const response = await axios.post(`http://localhost:3080/fuelquote/get_price`, {gallons, address, date});
         const price_data = await response.data.price;
         setPrice(price_data);
@@ -136,9 +136,10 @@ const FuelQuote = ( { cookies }) => {
                             placeholder="Month/Day/Year"
                         />
 
-                        <div className="mt-1 w-full bg-gray-100 text-center text-black py-2 rounded-md tracking-wide">{price && <p> Price: {price}</p>}</div>
-                    
 
+                        <div className="mt-1 w-full bg-gray-100 text-center text-black py-2 rounded-md tracking-wide">{price && <p> Price: {price}</p>}</div>
+
+                    
                         <div className='flex justify-between items-center mt-6'>
                             <button    
                                 htmlFor ='price'

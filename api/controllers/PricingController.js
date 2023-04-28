@@ -1,25 +1,26 @@
 //I think I need this for checking if I there exists a fuel quote history -Jenn
 //I am going to need some help checking for fuel history - Jenn
-const {getAuth} = require('../models/UserDB');
+const { response } = require('express');
+const {getUserFuelHistory} = require('../models/UserDB');
 
 function priceCalculation(Gallons, Address, fuelHistory){
     //this is the set price per gallon
-    let basePrice = 1.5;
+    const basePrice = 1.5;
 
     //formula: suggested price = current price + margin
     //margin = current price * (location factor - rate history factor + gallons requested factor + company profit factor)
     
     //if the address is local then the location factor is 0.02 if not then its 0.04
 
-    let local = 'TX'
+    let local = 'TX';
 
     let localFactor;
 
     if(Address.includes(local)){
-        localFactor = 0.02
+        localFactor = 0.02;
     }
     else {
-        localFactor = 0.04
+        localFactor = 0.04;
     }
 
     //if there's no fuel history then the history factor is 0% otherwise its 1%
@@ -28,7 +29,7 @@ function priceCalculation(Gallons, Address, fuelHistory){
 
     //the variable history should be a boolean, ill fix later
 
-    if(!fuelHistory){
+    if(getUserFuelHistory.data.length == 0){
         histFactor = 0;
     }
     else{
@@ -47,15 +48,15 @@ function priceCalculation(Gallons, Address, fuelHistory){
     }
 
     //company profit factor will always be 10%
-    let compFactor = 0.10;
+    const compFactor = 0.10;
 
     let margin = basePrice * (localFactor - histFactor + gallonFactor + compFactor);
 
-    let suggested = basePrice + margin;
+    const suggested = basePrice + margin;
 
-
+    const totalAmountDue = suggested * Gallons;
     //this is the total amount due
-    return suggested * Gallons;
+    return totalAmountDue;
 
 }
 
