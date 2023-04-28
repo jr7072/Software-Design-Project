@@ -66,24 +66,10 @@ const RegistrationForm = () => {
                     // use this block to display errors
 
                     const jsonResponse = error.response.data;
+                    console.log(jsonResponse);
 
-                    // add form styling to indicate errors
-                    for (const [field, status] of Object.entries(jsonResponse)){
-
-                        if (!status.valid){
-                            const fieldElement = document.getElementById(field);
-                            fieldElement.classList.add('border-red-500');
-                            
-                            // get parent element
-                            const fieldParent = fieldElement.parentElement;
-                            const warningElement = document.createElement('p');
-                            warningElement.classList.add('text-red-500');
-                            warningElement.innerHTML = status.message;
-
-                            fieldParent.appendChild(warningElement);
-                        }
-
-                    }
+                    const wrongpass = document.getElementById("password-incorrect");
+                    wrongpass.innerHTML = error.response.data.error;
 
                     return
                 }
@@ -120,6 +106,7 @@ const RegistrationForm = () => {
                         Password
                     </label>
                     <input class="bg-gray-200 rounded-full appearance-none w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" id="password" type="password" placeholder="******************" onChange={onChange}></input>
+                    <label class="block text-red-700 text-sm font-bold mb-2" for="password-incorrect" id="password-incorrect"></label>
                 </div>
                 <div class="flex items-center justify-between">
                     <button class="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onClick={submitFunction}>
