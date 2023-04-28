@@ -98,6 +98,18 @@ const deleteUser = (id) => {
     return -1;
 }
 
+const getPrice = () => {
+    return -1;
+}
+
+const getStatus = () => {
+    return -1;
+}
+
+const getFuelData = () => {
+    return -1;
+}
+
 
 module.exports = {
     getUsers,
@@ -106,5 +118,8 @@ module.exports = {
     createUser,
     deleteUser,
     getAuth,
-    createUserAuth
+    createUserAuth,
+    getPrice,
+    getStatus,
+    getFuelData
 };

@@ -1,61 +1,75 @@
-//fuel qoute router test
-const request = require('supertest')
-const express = require('express');
-const bodyParser = require('body-parser');
-const fuelQuotesRouter = require('../routes/FuelQuoteRouter');
+const {checkFieldStatus, validateFields } = require('../controllers/FuelController');
+const {getStatus, getFuelData} = require('../models/UserDB');
 
-const app = express();
-app.use(bodyParser.json());
-app.use('/fuelQuotes', fuelQuotesRouter);
+jest.mock('../models/UserDB');
 
-describe('fuelQuotesRouter', () => {
-  describe('POST /', () => {
-    test('should return a 200 response with a message when all required fields are provided', async () => {
-      const res = await request(app)
-        .post('/fuelQuotes')
-        .send({
-          gallons: 100,
-          address: '123 Main St',
-          date: '2023-04-01',
-          price: 2.50
-        });
-     
-      expect(res.statusCode).toEqual(200);
-      expect(res.body).toHaveProperty('message');
-    });
+it('checks if field status is true', async () => {
+    
+  //mock database call
+  getStatus.mockReturnValue(true);
 
-    test('should return a 400 response with an error message when a required field is missing', async () => {
-      const res = await request(app)
-        .post('/fuelQuotes')
-        .send({
-          gallons: 100,
-          address: '123 Main St',
-          price: 2.50
-        });
+  const expected = true;
+  
+  const result = await checkFieldStatus({});
+  
+  expect(result).toStrictEqual(expected);
 
-      expect(res.statusCode).toEqual(400);
-      expect(res.body).toHaveProperty('error');
-    });
+})
+
+it('checks if field status is false', async () => {
+    
+  //mock database call
+  getStatus.mockReturnValue(false);
+
+  const expected = false;
+  
+  const result = await checkFieldStatus({'gallons': 'Gallons field is required'});
+  
+  expect(result).toStrictEqual(expected);
+
+})
+
+it('checks if results is empty', async () => {
+    
+  //mock database call
+  getFuelData.mockReturnValue({
+    'gallons': '100',
+    'address': 'TX  Houston TX 77082',
+    'date': '2023-04-29',
+    'price': 171
   });
 
-  describe('GET /fuelQuotes', () => {
-    test('should return the user inputs as JSON', async () => {
-      const res = await request(app)
-        .get('/fuelQuotes')
-        .send({
-          gallons: 100,
-          address: '123 Main St',
-          date: '2023-04-01',
-          price: 2.50
-        });
+  const data = {
+    'gallons': '100',
+    'address': 'TX  Houston TX 77082',
+    'date': '2023-04-29',
+    'price': 171
+  };
 
-      expect(res.statusCode).toEqual(200);
-      expect(res.body).toEqual({
-        gallons: 100,
-        address: '123 Main St',
-        date: '2023-04-01',
-        price: 2.50
-      });
-    });
-  });
-});
+  const expected = {};
+  
+  const result = await validateFields(data);
+  
+  expect(result).toStrictEqual(expected);
+
+})
+
+it('checks if results are flagged', async () => {
+    
+  //mock database call
+  getFuelData.mockReturnValue({});
+
+  const data = {};
+
+  const expected = {
+    'gallons': 'Gallons field is required',
+    'address': 'Address field is required',
+    'date': 'Date field is required',
+    'price': 'Price field is required'
+  };
+  
+  const result = await validateFields(data);
+  
+  expect(result).toStrictEqual(expected);
+
+})
