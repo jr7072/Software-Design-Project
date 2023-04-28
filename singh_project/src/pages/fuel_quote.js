@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { useState, useReducer} from 'react';
+import { useState, useReducer, useEffect} from 'react';
 import States from "../components/states"
 import { useRouter } from "next/router"
 import axios, { AxiosError, HttpStatusCode } from 'axios'
@@ -13,6 +13,21 @@ const FuelQuote = ( { cookies }) => {
     const [date, setDate] = useState("");
     const [address, setAddress] = useState("");
     const [price, setPrice] = useState(2.5);
+
+    const user_id = cookies.user.slice(1, -1);
+
+    const getUserAddress = async() => {
+
+        const endpoint = `http://localhost:3080/users/${user_id}`;
+        const response = await axios.get(endpoint);
+        const address_data = await response.data.addressLine1;
+
+        setAddress(address_data);
+
+        const addressElement = document.getElementById("address");
+        addressElement.value = address_data;
+
+    }
 
     const upload_fuel_data = async() => {
         
@@ -48,6 +63,11 @@ const FuelQuote = ( { cookies }) => {
         upload_fuel_data();
     }
    
+
+    useEffect(() => {
+        getUserAddress();
+    }, []);
+
     return(
 
 
@@ -88,9 +108,11 @@ const FuelQuote = ( { cookies }) => {
                         />
                        
                         <input
+                            id="address"
+                            disabled
                             type="address"
                             placeholder="Address"
-                            className="block border border-grey-light w-full p-3 rounded mb-4"
+                            className="mt-6 mb-6 p-3 w-full bg-gray-100 font-semibold text-gray-300 py-2 rounded-md  tracking-wide"
                             value ={address}
                             onChange={(e) => setAddress(e.target.value)}
                        
