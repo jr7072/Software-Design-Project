@@ -1,26 +1,25 @@
-// fuel quote history page
-// import Image from 'next/image'
-// import { useState, useReducer} from 'react';
-// import States from "../components/states"
-// import { useRouter } from "next/router"
-// import axios, { AxiosError, HttpStatusCode } from 'axios'
-
 import { useEffect, useState } from 'react';
 import { parseCookies } from '@/helpers/parseCookie';
+import axios from 'axios';
 
 const FuelQuoteHistory = ( { cookies } ) => {
+
+    const user_id = cookies.user.slice(1, -1);
+
+
     const [quoteHistory, setQuoteHistory] = useState([]);
+
+    const fetchQuoteHistory = async () => {
+
+        const endpoint = `http://localhost:3080/fuelhistory/${user_id}`;
+        const response = await axios.get(endpoint);
+        const data = await response.data;
+
+        setQuoteHistory(data);
+    }
+
+
     useEffect(() => {
-        const fetchQuoteHistory = async () => {
-          try {
-            const response = await fetch('../routes/FuelHistoryRouter'); //idk
-            const data = await response.json();
-            setQuoteHistory(data);
-          } catch (error) {
-            console.error('Failed to fetch quote history:', error);
-          }
-        };
-    
         fetchQuoteHistory();
       }, []);
 
@@ -65,17 +64,17 @@ const FuelQuoteHistory = ( { cookies } ) => {
                                 
                                 {quoteHistory.map((quote) => (
                                     <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            {quote.gallonsRequested}
+                                        <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
+                                            {quote.gallons}
                                         </th>
-                                        <td class="px-12 py-9">
-                                            {quote.deliveryAddress}
+                                        <td class="px-12 py-9 text-white">
+                                            {quote.address}
                                         </td>
-                                        <td class="px-12 py-9">
-                                            {quote.deliveryDate}
+                                        <td class="px-12 py-9 text-white">
+                                            {quote.date}
                                         </td>
-                                        <td class="px-12 py-9">
-                                            {quote.suggestedPricePerGallon}
+                                        <td class="px-12 py-9 text-white">
+                                            {quote.price}
                                         </td>
                                 
                                 </tr>

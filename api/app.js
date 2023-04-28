@@ -6,6 +6,7 @@ const cors = require('cors');
 //routers
 const users = require('./routes/UserRouter');
 const fuelquote = require('./routes/FuelQuoteRouter')
+const fuelhistory = require('./routes/FuelHistoryRouter');
 const login = require('./routes/LoginRouter');
 const registration = require('./routes/RegistrationRouter');
 
@@ -36,6 +37,7 @@ app.use('/login', login);
 app.use('/registration', registration);
 app.use('/fuelquote', fuelquote);
 app.use('/users', users);
+app.use('/fuelhistory', fuelhistory);
 
 
 //start server
