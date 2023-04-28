@@ -1,7 +1,8 @@
 // user functions
 const {
     getUsers,
-    updateUser
+    updateUser,
+    getUserFuelHistory
 } = require('../models/UserDB');
 
 
@@ -18,6 +19,14 @@ const getUserData = async (id) => {
     return user;
 }
 
+const getUserFuelHistoryIds = async (id) => {
+
+    fuelHistoryids = getUserFuelHistory(id);
+
+    delete fuelHistoryids.empty
+
+    return Object.values(fuelHistoryids) 
+}
 
 const updateUserData = async (id, data) => {
     
