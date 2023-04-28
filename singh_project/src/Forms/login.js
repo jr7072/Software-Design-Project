@@ -30,7 +30,7 @@ const RegistrationForm = () => {
 
     const sendUserData = async() => {
 
-        const endpoint = `http://localhost:4080/login/login?username=${state.username}&password=${state.password}`;
+        const endpoint = `http://localhost:3080/login/login?username=${state.username}&password=${state.password}`;
         const body = state;
 
         try {
