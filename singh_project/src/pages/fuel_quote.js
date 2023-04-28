@@ -9,12 +9,14 @@ import { parseCookies } from '@/helpers/parseCookie';
 const user_id = 1;
 
 const FuelQuote = ( { cookies }) => {
+    
     const [gallons, setGallons] = useState("");
     const [date, setDate] = useState("");
     const [address, setAddress] = useState("");
     const [price, setPrice] = useState(null);
 
     const user_id = cookies.user.slice(1, -1);
+
 
     const getUserAddress = async() => {
 
@@ -39,7 +41,6 @@ const FuelQuote = ( { cookies }) => {
         
         try{
             const response = await axios.post(`http://localhost:3080/fuelquote/${user_id}`, {gallons, address, date, price});
-            console.log(response);
         } catch (error) {
             console.log(error);
         }
@@ -50,7 +51,6 @@ const FuelQuote = ( { cookies }) => {
         const response = await axios.post(`http://localhost:3080/fuelquote/get_price`, {gallons, address, date});
         const price_data = await response.data.price;
         setPrice(price_data);
-        
     } 
 
     const getFuelQuote = (e) => {
@@ -119,7 +119,7 @@ const FuelQuote = ( { cookies }) => {
                             disabled
                             type="address"
                             placeholder="Address"
-                            className="mt-6 mb-6 p-3 w-full bg-gray-100 font-semibold text-gray-300 py-2 rounded-md  tracking-wide"
+                            className="mt-6 mb-6 p-3 w-full bg-gray-100 py-2 rounded-md  text-black tracking-wide"
                             value ={address}
                             onChange={(e) => setAddress(e.target.value)}
                        
@@ -136,15 +136,10 @@ const FuelQuote = ( { cookies }) => {
                             placeholder="Month/Day/Year"
                         />
 
-                        <div className="mt-1 w-full bg-gray-100 font-semibold text-center text-gray-300 py-2 rounded-md  tracking-wide">
-                            {price === null ? (
-                                <p>Suggested Price</p>
-                                    ) : (
-                                <p>Suggested Price: {price}</p>
-                            )}
-                        </div>
-                    
 
+                        <div className="mt-1 w-full bg-gray-100 text-center text-black py-2 rounded-md tracking-wide">{price && <p> Price: {price}</p>}</div>
+
+                    
                         <div className='flex justify-between items-center mt-6'>
                             <button    
                                 htmlFor ='price'
