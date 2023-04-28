@@ -84,7 +84,7 @@ const FuelQuote = ( { cookies }) => {
         </div>
         <nav className="flex items-center space-x-1 text-sm font-medium text-gray-800">
          
-          <a href="../fuel_quote_history/"
+          <a href="../fuel_quote_history"
                         className="rounded-lg bg-yellow-600 px-3 py-2 text-white transition hover:bg-red-700">Quote History
 
 
