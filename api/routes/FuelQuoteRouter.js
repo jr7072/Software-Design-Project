@@ -42,7 +42,6 @@
 const express = require('express');
 const router = express.Router();
 const {validateFields, checkFieldStatus} = require('../controllers/FuelController')
-const upload_fuel_data = require('../pages/fuel_quote.js');
 // const { db } = require('../db/firebase_util.js');
 
 // routes here
@@ -62,7 +61,7 @@ router.get('/:id', (req, res) => {
 
 })
 
-router.put('/:id', async (req, res) => {
+router.post('/:id', async (req, res) => {
   // validation call
   const { gallons, address, date, price } = req.body;
  
