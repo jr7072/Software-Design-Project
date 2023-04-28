@@ -26,8 +26,8 @@ const FuelQuote = () => {
     const getFuelPrice = async() => {
 
         const response = await axios.post(`http://localhost:3080/fuelquote/get_price`, {gallons, address, date});
-        price = await response.data.price;
-        setPrice(price);
+        const price_data = await response.data.price;
+        setPrice(price_data);
     } 
 
     const getFuelQuote = (e) => {

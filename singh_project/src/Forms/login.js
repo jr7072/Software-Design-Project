@@ -1,4 +1,5 @@
-import { useEffect, useReducer } from "react"
+import { useReducer } from "react"
+import { useCookies } from "react-cookie"
 import { useRouter } from "next/router"
 import axios, { AxiosError, HttpStatusCode } from 'axios'
 
@@ -24,7 +25,10 @@ const reducer = (state, action) => {
 const RegistrationForm = () => {
 
     const [state, dispatch] = useReducer(reducer, initialState);
+    const [cookie, setCookie] = useCookies(['user']);
     const router = useRouter();
+
+    console.log(cookie);
 
     //console.log(state);
 
@@ -51,6 +55,13 @@ const RegistrationForm = () => {
             if (status !== 200){
                 throw(`resource not updated returned ${status}`);
             }
+
+            // set cookie
+            cookieData = {
+                user_id: response.data.user_id,
+            }
+
+            setCookie('user',)
 
             // push route if successful
             router.push('/account');
