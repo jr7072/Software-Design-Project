@@ -10,7 +10,21 @@ router.post('/get_price', async (req, res) => {
   // validation call
   const { gallons, address, date} = req.body;
 
-  //calculate price here and send it back to the client
+  if (!gallons || !address) {
+    res.status(400).json({ error: 'Missing required fields' });
+    return;
+  }
+
+  const price = priceCalculation(gallons, address);
+
+  const data = {
+    price: price
+  } 
+
+  const json_data = JSON.stringify(data);
+
+  res.status(200).send(json_data);
+
 });
 
 
@@ -27,10 +41,6 @@ router.post('/:id', async (req, res) => {
     res.status(400).json({ error: 'Missing required fields' });
     return;
   }
-
-  //calling the pricing function, I think I did it right
-  price = priceCalculation(gallons, address);
-
 
   try {
     const id = req.params.id;
