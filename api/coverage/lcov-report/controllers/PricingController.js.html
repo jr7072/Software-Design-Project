@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.76% </span>
+                <span class="strong">15.78% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/17</span>
+                <span class='fraction'>3/19</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.76% </span>
+                <span class="strong">15.78% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/17</span>
+                <span class='fraction'>3/19</span>
             </div>
         
             
@@ -126,8 +126,10 @@
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,7 +183,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -191,26 +193,27 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">//I think I need this for checking if I there exists a fuel quote history -Jenn
 //I am going to need some help checking for fuel history - Jenn
-const {getAuth} = require('../models/UserDB');
+const { response } = require('express');
+const {getUserFuelHistory} = require('../models/UserDB');
 &nbsp;
 function <span class="fstat-no" title="function not covered" >priceCalculation(</span>Gallons, Address, fuelHistory){
     //this is the set price per gallon
-    let basePrice = <span class="cstat-no" title="statement not covered" >1.5;</span>
+    const basePrice = <span class="cstat-no" title="statement not covered" >1.5;</span>
 &nbsp;
     //formula: suggested price = current price + margin
     //margin = current price * (location factor - rate history factor + gallons requested factor + company profit factor)
     
     //if the address is local then the location factor is 0.02 if not then its 0.04
 &nbsp;
-    let local = <span class="cstat-no" title="statement not covered" >'TX'</span>
+    let local = <span class="cstat-no" title="statement not covered" >'TX';</span>
 &nbsp;
     let localFactor;
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if(Address.includes(local)){</span>
-<span class="cstat-no" title="statement not covered" >        localFactor = 0.02</span>
+<span class="cstat-no" title="statement not covered" >        localFactor = 0.02;</span>
     }
     else {
-<span class="cstat-no" title="statement not covered" >        localFactor = 0.04</span>
+<span class="cstat-no" title="statement not covered" >        localFactor = 0.04;</span>
     }
 &nbsp;
     //if there's no fuel history then the history factor is 0% otherwise its 1%
@@ -219,7 +222,7 @@ function <span class="fstat-no" title="function not covered" >priceCalculation(<
 &nbsp;
     //the variable history should be a boolean, ill fix later
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if(!fuelHistory){</span>
+<span class="cstat-no" title="statement not covered" >    if(fuelHistory.length == 0){</span>
 <span class="cstat-no" title="statement not covered" >        histFactor = 0;</span>
     }
     else{
@@ -238,15 +241,15 @@ function <span class="fstat-no" title="function not covered" >priceCalculation(<
     }
 &nbsp;
     //company profit factor will always be 10%
-    let compFactor = <span class="cstat-no" title="statement not covered" >0.10;</span>
+    const compFactor = <span class="cstat-no" title="statement not covered" >0.10;</span>
 &nbsp;
     let margin = <span class="cstat-no" title="statement not covered" >basePrice * (localFactor - histFactor + gallonFactor + compFactor);</span>
 &nbsp;
-    let suggested = <span class="cstat-no" title="statement not covered" >basePrice + margin;</span>
+    const suggested = <span class="cstat-no" title="statement not covered" >basePrice + margin;</span>
 &nbsp;
-&nbsp;
+    const totalAmountDue = <span class="cstat-no" title="statement not covered" >suggested * Gallons;</span>
     //this is the total amount due
-<span class="cstat-no" title="statement not covered" >    return suggested * Gallons;</span>
+<span class="cstat-no" title="statement not covered" >    return totalAmountDue;</span>
 &nbsp;
 }
 &nbsp;
@@ -259,7 +262,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-04-28T19:43:51.914Z
+                at 2023-04-28T20:41:21.180Z
             </div>
         <script src="../prettify.js"></script>
         <script>
