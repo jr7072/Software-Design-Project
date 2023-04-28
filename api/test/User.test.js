@@ -24,7 +24,9 @@ it('should return user data by id', async () => {
       "city": "Somecity",
       "state": "TX",
       "zipCode": "67890",
-      "fuelQuotes": []
+      "fuelQuote": {
+        "empty": "empty"
+      }
     },
   );
 
@@ -69,7 +71,9 @@ it("updates user's data", async () => {
         "city": "Anytown",
         "state": "CA",
         "zipCode": "12345",
-        "fuelQuotes": []
+        "fuelQuote": {
+          "empty": "empty"
+        }
     }
   );
 
@@ -108,7 +112,9 @@ it("updates user data on one field", async () => {
       "city": "Somecity",
       "state": 'TX',
       "zipCode": "67890",
-      "fuelQuotes": []
+      "fuelQuote": {
+        "empty": "empty"
+      }
     }
   );
 
@@ -157,7 +163,9 @@ it("throws an error if user field is not valid", async () => {
         "city": "Anytown",
         "state": "CA",
         "zipCode": "12345",
-        "fuelQuotes": []
+        "fuelQuote": {
+          "empty": "empty"
+        }
       }
   );
 

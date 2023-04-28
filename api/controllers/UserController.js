@@ -14,7 +14,7 @@ const getUserData = async (id) => {
         throw new Error("User doesn't exist");
     }
 
-    delete user.fuelQuotes;
+    delete user.fuelQuote;
 
     return user;
 }
@@ -48,7 +48,7 @@ const updateUserData = async (id, data) => {
 
     await updateUser(id, user);
 
-    delete user.fuelQuotes;
+    delete user.fuelQuote;
 
     return user;
 }
@@ -116,6 +116,7 @@ const checkFieldStatus = (fieldResults) => {
 
 module.exports = {
     getUserData,
+    getUserFuelHistoryIds,
     updateUserData,
     validateFields,
     checkFieldStatus
