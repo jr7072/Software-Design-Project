@@ -13,7 +13,7 @@ const FuelQuote = ( { cookies }) => {
     const [gallons, setGallons] = useState("");
     const [date, setDate] = useState("");
     const [address, setAddress] = useState("");
-    const [price, setPrice] = useState(null);
+    const [price, setPrice] = useState(0.0);
 
     const user_id = cookies.user.slice(1, -1);
 
