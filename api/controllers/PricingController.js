@@ -2,7 +2,7 @@
 //I am going to need some help checking for fuel history - Jenn
 const {getAuth} = require('../models/UserDB');
 
-export function priceCalculation(Gallons, Address, fuelHistory){
+function priceCalculation(Gallons, Address, fuelHistory){
     //this is the set price per gallon
     let basePrice = 1.5;
 
@@ -57,4 +57,8 @@ export function priceCalculation(Gallons, Address, fuelHistory){
     //this is the total amount due
     return suggested * Gallons;
 
+}
+
+module.exports = {
+    priceCalculation
 }

@@ -48,6 +48,7 @@ const createUser = async (key) => {
 
     var newUserRef = userRef.child(key);
     newUserRef.set(data);
+    var nested = newUserRef.child("fuelQuote").set({"empty": "empty"});
 
     return -1;
 }

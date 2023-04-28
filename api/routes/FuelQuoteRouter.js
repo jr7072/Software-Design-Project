@@ -1,7 +1,7 @@
-import { priceCalculation } from '../controllers/PricingController';
 const express = require('express');
 const router = express.Router();
 const {validateFields, checkFieldStatus} = require('../controllers/FuelController')
+const {priceCalculation} = require('../controllers/PricingController')
 // const { db } = require('../db/firebase_util.js');
 
 // routes here
