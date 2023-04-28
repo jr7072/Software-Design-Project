@@ -20,7 +20,13 @@ const FuelQuote = ( { cookies }) => {
 
         const endpoint = `http://localhost:3080/users/${user_id}`;
         const response = await axios.get(endpoint);
-        const address_data = await response.data.addressLine1;
+        const addressLine1 = await response.data.addressLine1;
+        const addressLine2 = await response.data.addressLine2;
+        const city = await response.data.city;
+        const state = await response.data.state;
+        const zipCode = await response.data.zipCode;
+
+        const address_data = `${addressLine1} ${addressLine2} ${city} ${state} ${zipCode}`;
 
         setAddress(address_data);
 
@@ -44,6 +50,7 @@ const FuelQuote = ( { cookies }) => {
         const response = await axios.post(`http://localhost:3080/fuelquote/get_price`, {gallons, address, date});
         const price_data = await response.data.price;
         setPrice(price_data);
+        
     } 
 
     const getFuelQuote = (e) => {
