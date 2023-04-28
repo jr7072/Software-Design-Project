@@ -4,10 +4,6 @@ import { useRouter } from "next/router"
 import axios, { AxiosError, HttpStatusCode } from 'axios'
 
 
-//assume user 1 in logged in for now
-const user_id = 1;
-
-
 //form initial state
 const initialState = {
   firstName:  "",
@@ -43,14 +39,14 @@ const reducer = (state, action) => {
 }
 
 
-const AccountForm = () => {
+const AccountForm = ({ user }) => {
   
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
 
   const fetchUserData = async () => {
     
-    const endpoint = `http://localhost:3080/users/${user_id}`;
+    const endpoint = `http://localhost:3080/users/${user}`;
     const config = {
       headers: {
         'Cache-Control': 'no-cache',
