@@ -16,7 +16,7 @@ router.get('/register', async (req, res) => {
         if (username == undefined || password == undefined) {
             throw new Error("Invalid params");
         }
-
+        
         const data = await createNewUserAuth(username, password); //adds new user to Auth db
 
         const json_data = JSON.stringify(data);
