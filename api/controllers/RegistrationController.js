@@ -13,6 +13,10 @@ function hashCode(str) {
 
 const createNewUserAuth = async (username, password) => {
 
+    if (username.toString().length < 8) {
+        throw new Error("Username is too short. Must be at least 6 characters long.");
+    }
+
     //check to see if password is long enough
     if (password.toString().length < 8) {
         throw new Error("Password is too short. Must be at least 8 characters long.");
