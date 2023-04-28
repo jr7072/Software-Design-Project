@@ -23,15 +23,22 @@ const FuelQuote = () => {
         }
     }
 
+    const getFuelPrice = async() => {
+
+        const response = await axios.post(`http://localhost:3080/fuelquote/get_price`, {gallons, address, date});
+        price = await response.data.price;
+        setPrice(price);
+    } 
+
     const getFuelQuote = (e) => {
         e.preventDefault();
+        getFuelPrice();
 
     }
 
     const saveFuelQuote = (e) => {
         e.preventDefault();
         upload_fuel_data();
-
     }
 
     const handleFormSubmit = (e) => {

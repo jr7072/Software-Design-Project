@@ -2,26 +2,23 @@ const express = require('express');
 const router = express.Router();
 const {validateFields, checkFieldStatus} = require('../controllers/FuelController')
 const {priceCalculation} = require('../controllers/PricingController')
-// const { db } = require('../db/firebase_util.js');
+// const { db } = require('../db/firebase_util.js')
 
-// routes here
-router.get('/:id', (req, res) => {
-  const id = req.params.id;
-  //database call
-  upload_fuel_data(id).then((data => {
-      const json_data = JSON.stringify(data);
-      res.status(200).send(json_data);
-  })).catch(error => {
-      const data = {
-          error: error.message
-      }
-      const json_data = JSON.stringify(data);
-      res.status(400).send(json_data);
-  });
+router.post('/get_price', async (req, res) => {
+  //calculate price here and send it back to the client
 
-})
+  // validation call
+  const { gallons, address, date} = req.body;
+
+  //calculate price here and send it back to the client
+});
+
 
 router.post('/:id', async (req, res) => {
+  // use this function to generate an uuid for the fuel quote, get the user fuel quote history using the route
+  // and update the user with the new fuel quote list and create a new fuel quote entry with the same id
+
+
   // validation call
   const { gallons, address, date, price } = req.body;
 
@@ -65,52 +62,5 @@ router.post('/:id', async (req, res) => {
 });
 
 
-// router.get('/', (req, res) => {
-//   res.json(req.body);
-// });
-
-
 module.exports = router;
 
-
-
-
-// const express = require('express');
-// const router = express.Router();
-// const validate = require('../controllers/FuelController')
-// const { db } = require('../db/firebase_util.js');
-
-
-// router.post('/:fuelId', async (req, res) => {
-//   console.log('Inside fuelQuote post request handler');
-//   const { gallons, address, date, price } = req.body;
-//   const fuelId = req.params.fuelId;
-//   console.log('User inputs:', req.body);
-
-//   if (!gallons || !address || !date || !price) {
-//     res.status(400).json({ error: 'Missing required fields' });
-//     return;
-//   }
-
-//   try {
-//     const docRef = await db.ref(`fuel/${fuelId}`).push({
-//       gallons,
-//       address,
-//       date,
-//       price
-//     });
-//     console.log('Document written with ID: ', docRef.id);
-//     res.json({ message: 'Received userInputs from frontend and added to Firebase' });
-//   } catch (error) {
-//     console.error('Error adding document: ', error);
-//     res.status(500).json({ error: 'Error adding document to Firebase' });
-//   }
-// });
-
-
-// router.get('/', (req, res) => {
-//   res.json(req.body);
-// });
-
-
-// module.exports = router;
