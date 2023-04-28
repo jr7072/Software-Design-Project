@@ -1,6 +1,7 @@
 //I think I need this for checking if I there exists a fuel quote history -Jenn
 //I am going to need some help checking for fuel history - Jenn
-const {getAuth} = require('../models/UserDB');
+const { response } = require('express');
+const {getUserFuelHistory} = require('../models/UserDB');
 
 function priceCalculation(Gallons, Address, fuelHistory){
     //this is the set price per gallon
@@ -28,7 +29,7 @@ function priceCalculation(Gallons, Address, fuelHistory){
 
     //the variable history should be a boolean, ill fix later
 
-    if(!fuelHistory){
+    if(getUserFuelHistory.data.length == 0){
         histFactor = 0;
     }
     else{
