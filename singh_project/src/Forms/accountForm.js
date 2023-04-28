@@ -44,6 +44,8 @@ const AccountForm = ({ user }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
 
+  user = user.slice(1, -1);
+
   const fetchUserData = async () => {
     
     const endpoint = `http://localhost:3080/users/${user}`;
@@ -76,7 +78,7 @@ const AccountForm = ({ user }) => {
 
   const sendUserData = async() => {
     
-    const endpoint = `http://localhost:3080/users/${user_id}`;
+    const endpoint = `http://localhost:3080/users/${user}`;
     const body = state;
 
     try {
