@@ -1,19 +1,19 @@
 const {getAuth} = require('../models/UserDB');
 
-function validateFields(proposedData) {
+function validateFields(data) {
   const results = {};
   
-  if (!proposedData.gallons) {
+  if (!data.gallons) {
     results.gallons = 'Gallons field is required';
   } else if (isNaN(data.gallons) || data.gallons <= 0) {
     results.gallons = 'Gallons field should be a positive number';
   }
   
-  if (!proposedData.address) {
+  if (!data.address) {
     results.address = 'Address field is required';
   }
   
-  if (!proposedData.date) {
+  if (!data.date) {
     results.date = 'Date field is required';
   } else {
     const currentDate = new Date();
@@ -23,12 +23,13 @@ function validateFields(proposedData) {
     }
   }
   
-  if (!proposedData.price) {
+  if (!data.price) {
     results.price = 'Price field is required';
   } else if (isNaN(data.price) || data.price <= 0) {
     results.price = 'Price field should be a positive number';
   }
   
+
   return results;
 }
 
