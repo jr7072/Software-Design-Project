@@ -1,6 +1,27 @@
 // fuel quote history page
+// import Image from 'next/image'
+// import { useState, useReducer} from 'react';
+// import States from "../components/states"
+// import { useRouter } from "next/router"
+// import axios, { AxiosError, HttpStatusCode } from 'axios'
+
+import { useEffect, useState } from 'react';
 
 const FuelQuoteHistory = () => {
+    const [quoteHistory, setQuoteHistory] = useState([]);
+    useEffect(() => {
+        const fetchQuoteHistory = async () => {
+          try {
+            const response = await fetch('../routes/FuelHistoryRouter'); //idk
+            const data = await response.json();
+            setQuoteHistory(data);
+          } catch (error) {
+            console.error('Failed to fetch quote history:', error);
+          }
+        };
+    
+        fetchQuoteHistory();
+      }, []);
 
     return (
         <div class = "flex h-screen w-screen">
@@ -40,66 +61,25 @@ const FuelQuoteHistory = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        ...
-                                    </th>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    
-                                </tr>
-                                <tr class="border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        ...
-                                    </th>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
+                                
+                                {quoteHistory.map((quote) => (
+                                    <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            {quote.gallonsRequested}
+                                        </th>
+                                        <td class="px-12 py-9">
+                                            {quote.deliveryAddress}
+                                        </td>
+                                        <td class="px-12 py-9">
+                                            {quote.deliveryDate}
+                                        </td>
+                                        <td class="px-12 py-9">
+                                            {quote.suggestedPricePerGallon}
+                                        </td>
                                 
                                 </tr>
-                                <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        ...
-                                    </th>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    
-                                </tr>
-                                <tr class="border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-lg text-gray-900 whitespace-nowrap dark:text-white">
-                                        ...
-                                    </th>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    
-                                </tr>
+                            ))}
+                                
                             </tbody>
                         </table>
                     </div>
