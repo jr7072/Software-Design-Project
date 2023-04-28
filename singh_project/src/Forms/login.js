@@ -54,7 +54,9 @@ const RegistrationForm = () => {
                 throw(`resource not updated returned ${status}`);
             }
 
-            setCookie("user", JSON.stringify(data), {
+            const user_data = response.data
+
+            setCookie("user", JSON.stringify(user_data.id), {
                     path: "/",
                     maxAge: 3600, // Expires after 1hr
                     sameSite: true,
@@ -64,7 +66,6 @@ const RegistrationForm = () => {
             router.push('/account');
 
         }catch(error){
-            console.log(error.response.data);
 
             // looking only for axios error
             if (error instanceof AxiosError){
