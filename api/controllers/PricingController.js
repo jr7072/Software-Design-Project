@@ -5,7 +5,7 @@ const {getUserFuelHistory} = require('../models/UserDB');
 
 function priceCalculation(Gallons, Address, fuelHistory){
     //this is the set price per gallon
-    let basePrice = 1.5;
+    const basePrice = 1.5;
 
     //formula: suggested price = current price + margin
     //margin = current price * (location factor - rate history factor + gallons requested factor + company profit factor)
@@ -48,7 +48,7 @@ function priceCalculation(Gallons, Address, fuelHistory){
     }
 
     //company profit factor will always be 10%
-    let compFactor = 0.10;
+    const compFactor = 0.10;
 
     let margin = basePrice * (localFactor - histFactor + gallonFactor + compFactor);
 
