@@ -1,8 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const {validateFields, checkFieldStatus} = require('../controllers/FuelController')
+const {
+  getUserFuelHistoryIds,
+  updateUserFuelHistory,
+} = require('../controllers/UserController');
+
+const { v1 } = require('uuid');
+
 const {priceCalculation} = require('../controllers/PricingController')
-// const { db } = require('../db/firebase_util.js')
+const { db } = require('../db/firebase_util.js')
 
 router.post('/get_price', async (req, res) => {
   //calculate price here and send it back to the client
@@ -44,7 +51,7 @@ router.post('/:id', async (req, res) => {
 
   try {
     const id = req.params.id;
-    const data = req.body;
+    let data = req.body;
 
     // test data
     const dataResults = validateFields(data);
@@ -57,6 +64,22 @@ router.post('/:id', async (req, res) => {
         return
     }
 
+    data.fuel_id = v1();
+
+    // update user fuel quote history
+    const fuel_ids = await getUserFuelHistoryIds(id);
+
+    console.log(fuel_ids);
+
+    fuel_ids.push(data.fuel_id);
+
+    // update the user history
+    await updateUserFuelHistory(id, fuel_ids);
+
+    // create new fuel quote entry
+    const fuelRef = db.ref(`fuel/${data.fuel_id}`);
+    await fuelRef.set(data);
+    
     const json_data = JSON.stringify(data);
     res.status(200).send(json_data);
 

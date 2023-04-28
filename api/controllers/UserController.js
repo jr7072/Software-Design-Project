@@ -28,6 +28,19 @@ const getUserFuelHistoryIds = async (id) => {
     return Object.values(fuelHistoryids) 
 }
 
+const updateUserFuelHistory = async (id, data) => {
+
+    user = await getUsers(id);
+
+    if (!user) {
+        throw new Error("User doesn't exist");
+    }
+
+    user.fuelQuote = data;
+
+    await updateUser(id, user);
+}
+
 const updateUserData = async (id, data) => {
     
     user = await getUsers(id);
@@ -119,5 +132,6 @@ module.exports = {
     getUserFuelHistoryIds,
     updateUserData,
     validateFields,
-    checkFieldStatus
+    checkFieldStatus,
+    updateUserFuelHistory
 }
