@@ -23,6 +23,7 @@ const getAuth = async (username) => {
         if (auths[key].username == username) {
             //if a match is found, save it in result
             result = auths[key];
+            result.id = key;
         }
     }
 
@@ -74,6 +75,8 @@ const createUserAuth = async (username, hash) => {
     var newAuthRef = authRef.child(key);
     newAuthRef.set(result);
     createUser(key);
+
+    result.id = key;
 
     return result;
 }
