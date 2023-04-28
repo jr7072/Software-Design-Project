@@ -1,6 +1,7 @@
 import AccountForm from "@/Forms/accountForm";
+import { parseCookies } from "@/helpers/parseCookie";
 
-const Account = () => {
+const Account = ( { cookies } ) => {
 
     return (
         <div className="w-screen h-screen flex items-center justify-center bg-accountForm bg-no-repeat bg-cover">
@@ -11,6 +12,22 @@ const Account = () => {
             </div>
         </div>  
     )
+}
+
+Account.getInitialProps = async ({ req, res }) => {
+    
+    const data = parseCookies(req)
+    
+    if (res) {
+      if (Object.keys(data).length === 0 && data.constructor === Object) {
+        res.writeHead(301, { Location: "/" })
+        res.end()
+      }
+    }
+    
+    return {
+      cookies: data && data,
+    }
 }
 
 export default Account;

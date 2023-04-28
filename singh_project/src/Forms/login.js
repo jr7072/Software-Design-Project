@@ -28,8 +28,6 @@ const RegistrationForm = () => {
     const [cookie, setCookie] = useCookies(['user']);
     const router = useRouter();
 
-    console.log(cookie);
-
     //console.log(state);
 
     const sendUserData = async() => {
@@ -56,12 +54,11 @@ const RegistrationForm = () => {
                 throw(`resource not updated returned ${status}`);
             }
 
-            // set cookie
-            cookieData = {
-                user_id: response.data.user_id,
-            }
-
-            setCookie('user',)
+            setCookie("user", JSON.stringify(data), {
+                    path: "/",
+                    maxAge: 3600, // Expires after 1hr
+                    sameSite: true,
+            })
 
             // push route if successful
             router.push('/account');

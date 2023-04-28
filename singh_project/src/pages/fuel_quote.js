@@ -3,11 +3,12 @@ import { useState, useReducer} from 'react';
 import States from "../components/states"
 import { useRouter } from "next/router"
 import axios, { AxiosError, HttpStatusCode } from 'axios'
+import { parseCookies } from '@/helpers/parseCookie';
 
 // fuel quote page
 const user_id = 1;
 
-const FuelQuote = () => {
+const FuelQuote = ( { cookies }) => {
     const [gallons, setGallons] = useState("");
     const [date, setDate] = useState("");
     const [address, setAddress] = useState("");
@@ -136,6 +137,22 @@ const FuelQuote = () => {
         </form>
        
     )
+}
+
+FuelQuote.getInitialProps = async ({ req, res }) => {
+    
+    const data = parseCookies(req)
+    
+    if (res) {
+      if (Object.keys(data).length === 0 && data.constructor === Object) {
+        res.writeHead(301, { Location: "/" })
+        res.end()
+      }
+    }
+    
+    return {
+      cookies: data && data,
+    }
 }
 
 
