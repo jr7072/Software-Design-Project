@@ -29,7 +29,7 @@ function priceCalculation(Gallons, Address, fuelHistory){
 
     //the variable history should be a boolean, ill fix later
 
-    if(getUserFuelHistory.data.length == 0){
+    if(fuelHistory.length == 0){
         histFactor = 0;
     }
     else{

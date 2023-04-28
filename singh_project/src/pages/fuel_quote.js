@@ -47,8 +47,7 @@ const FuelQuote = ( { cookies }) => {
     }
 
     const getFuelPrice = async() => {
-        setPrice(null);
-        const response = await axios.post(`http://localhost:3080/fuelquote/get_price`, {gallons, address, date});
+        const response = await axios.post(`http://localhost:3080/fuelquote/get_price/${user_id}`, {gallons, address});
         const price_data = await response.data.price;
         setPrice(price_data);
     } 
@@ -63,14 +62,7 @@ const FuelQuote = ( { cookies }) => {
         e.preventDefault();
         upload_fuel_data();
     }
-
-    const handleFormSubmit = (e) => {
-        e.preventDefault();
-        console.log("hello");
-        upload_fuel_data();
-    }
    
-
     useEffect(() => {
         getUserAddress();
     }, []);

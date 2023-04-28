@@ -11,8 +11,10 @@ const { v1 } = require('uuid');
 const {priceCalculation} = require('../controllers/PricingController')
 const { db } = require('../db/firebase_util.js')
 
-router.post('/get_price', async (req, res) => {
+router.post('/get_price/:id', async (req, res) => {
   //calculate price here and send it back to the client
+
+  const id = req.params.id;
 
   // validation call
   const { gallons, address, date} = req.body;
@@ -22,7 +24,10 @@ router.post('/get_price', async (req, res) => {
     return;
   }
 
-  const price = priceCalculation(gallons, address);
+  // get fuel history
+  const fuel_ids = await getUserFuelHistoryIds(id);
+
+  const price = priceCalculation(gallons, address, fuel_ids);
 
   const data = {
     price: price
