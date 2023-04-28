@@ -13,6 +13,8 @@ const getUserData = async (id) => {
         throw new Error("User doesn't exist");
     }
 
+    delete user.fuelQuotes;
+
     return user;
 }
 
@@ -34,7 +36,10 @@ const updateUserData = async (id, data) => {
         user[key] = value;
     }
 
+
     await updateUser(id, user);
+
+    delete user.fuelQuotes;
 
     return user;
 }

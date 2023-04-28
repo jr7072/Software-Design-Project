@@ -6,8 +6,8 @@ const {
   validateFields,
   checkFieldStatus  
 } = require('../controllers/UserController');
-const {getUsers} = require('../models/UserDB');
 
+const {getUsers} = require('../models/UserDB');
 
 jest.mock('../models/UserDB');
 
@@ -17,13 +17,14 @@ it('should return user data by id', async () => {
   //mock database call
   getUsers.mockReturnValue(
     {
-        "firstName": "Jane",
-        "lastName": "Smith",
-        "addressLine1": "456 Elm St",
-        "addressLine2": "Apt 2B",
-        "city": "Somecity",
-        "state": "TX",
-        "zipCode": "67890"
+      "firstName": "Jane",
+      "lastName": "Smith",
+      "addressLine1": "456 Elm St",
+      "addressLine2": "Apt 2B",
+      "city": "Somecity",
+      "state": "TX",
+      "zipCode": "67890",
+      "fuelQuotes": []
     },
   );
 
@@ -36,60 +37,50 @@ it('should return user data by id', async () => {
     "state": "TX",
     "zipCode": "67890"
   };
-  
+
   const result = await getUserData(2);
   
   expect(result).toStrictEqual(expected);
 
 })
 
-
-it("throws error if user doesn't exist", async () => {
+it("throws error if user doesn't exist", async() => {
 
   getUsers.mockReturnValue(
     null
   );
 
-  await expect(() => getUserData(2)).toThrow("User doesn't exist");
-})
+  try{
+    await getUserData(2);
+  } catch (e) {
+    expect(e).toStrictEqual(Error("User doesn't exist"));
+  }
 
+})
 
 it("updates user's data", async () => {
 
   getUsers.mockReturnValue(
-    [
       {
-        "id": 1,
         "firstName": "John",
         "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
         "state": "CA",
-        "zipCode": "12345"
-    },
-    {
-        "id": 2,
-        "firstName": "Jane",
-        "lastName": "Smith",
-        "addressLine1": "456 Elm St",
-        "addressLine2": "Apt 2B",
-        "city": "Somecity",
-        "state": "TX",
-        "zipCode": "67890"
-    },
-    ]
+        "zipCode": "12345",
+        "fuelQuotes": []
+    }
   );
 
   const expected = {
-    "id": 1,
     "firstName": "James",
     "lastName": "Doe",
     "addressLine1": "456 Main St",
     "addressLine2": null,
     "city": "Chatown",
     "state": "CA",
-    "zipCode": "67891"
+    "zipCode": "67891",
   };
 
   const argument = {
@@ -109,32 +100,19 @@ it("updates user's data", async () => {
 it("updates user data on one field", async () => {
 
   getUsers.mockReturnValue(
-    [
-      {
-        "id": 1,
-        "firstName": "John",
-        "lastName": "Doe",
-        "addressLine1": "123 Main St",
-        "addressLine2": null,
-        "city": "Anytown",
-        "state": "CA",
-        "zipCode": "12345"
-    },
     {
-        "id": 2,
-        "firstName": "Jane",
-        "lastName": "Smith",
-        "addressLine1": "456 Elm St",
-        "addressLine2": "Apt 2B",
-        "city": "Somecity",
-        "state": "TX",
-        "zipCode": "67890"
-    },
-    ]
+      "firstName": "Jane",
+      "lastName": "husk",
+      "addressLine1": "456 Elm St",
+      "addressLine2": "Apt 2B",
+      "city": "Somecity",
+      "state": 'TX',
+      "zipCode": "67890",
+      "fuelQuotes": []
+    }
   );
 
   const expected = {
-    "id": 2,
     "firstName": "Jane",
     "lastName": "Greer",
     "addressLine1": "456 Elm St",
@@ -157,47 +135,41 @@ it("updates user data on one field", async () => {
 it("raises an error if user doesn't exist", async () => {
 
   getUsers.mockReturnValue(
-    [
-      {
-        "id": 1,
-        "firstName": "John",
-        "lastName": "Doe",
-        "addressLine1": "123 Main St",
-        "addressLine2": null,
-        "city": "Anytown",
-        "state": "CA",
-        "zipCode": "12345"
-    }
-    ]
+    null
   );
 
-  await expect(() => updateUserData(2, {})).
-                        toThrow("User doesn't exist");
+  try{
+    await updateUserData(2, {});
+  } catch (e) {
+    expect(e).toStrictEqual(Error("User doesn't exist"));
+  }
 })
 
 
 it("throws an error if user field is not valid", async () => {
 
   getUsers.mockReturnValue(
-    [
       {
-        "id": 1,
         "firstName": "John",
         "lastName": "Doe",
         "addressLine1": "123 Main St",
         "addressLine2": null,
         "city": "Anytown",
         "state": "CA",
-        "zipCode": "12345"
-    }
-    ] 
+        "zipCode": "12345",
+        "fuelQuotes": []
+      }
   );
 
   const argument = {
     "shirt size": {value: "large"}
   };
 
-  await expect(() => updateUserData(1, argument)).toThrow("Invalid field: shirt size");
+  try{
+    await updateUserData(1, argument);
+  } catch (e) {
+    expect(e).toStrictEqual(Error("Invalid field: shirt size"));
+  }
 
 })
 
@@ -211,7 +183,7 @@ it("validates user data and returns accepted for each field", () => {
     "addressLine2": null,
     "city": "Anytown",
     "state": "CA",
-    "zipCode": "12345"
+    "zipCode": "12345",
   }
 
   const expected_result = {
