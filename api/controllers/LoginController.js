@@ -1,6 +1,6 @@
+const {getAuth} = require('../models/UserDB');
 
-const {authDB} = require('../models/UserDB');
-
+//Generates hash code from a string
 function hashCode(str) {
     let hash = 0;
     for (let i = 0, len = str.length; i < len; i++) {
@@ -11,22 +11,23 @@ function hashCode(str) {
     return hash;
 }
 
-const fetchUserAuthData = (username, password) => {
+//Gets the user authentication data from the db
+//Gets the user authentication data that matches the username from the get request
+//If no matching username is found in db, then "Username is incorrect"
+//If hash does not match, then "Password is incorrect"
+const fetchUserAuthData = async (username, hash) => {
     
-    users = authDB();
-    user_data = users.filter(users => users.username == username);
+    user = await getAuth(username);
 
-    if (user_data.length == 0) {
-        throw new Error("User doesn't exist");
+    if (user == -1) {
+        throw new Error("Username is incorrect");
     }
 
-    user_object = user_data[0]; //user_object.username or user_object.hash
-    
-    if (password !== user_object.hash) {
-        throw new Error("Wrong Password");
+    if (hash !== user.hash) {
+        throw new Error("Password is incorrect");
     }
 
-    return user_object;
+    return user;
 }
 
 module.exports = {

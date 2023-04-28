@@ -1,6 +1,6 @@
+const {getAuth, createUserAuth} = require('../models/UserDB');
 
-const {authDB} = require('../models/UserDB');
-
+//Generates hash code from a string
 function hashCode(str) {
     let hash = 0;
     for (let i = 0, len = str.length; i < len; i++) {
@@ -11,25 +11,24 @@ function hashCode(str) {
     return hash;
 }
 
-const fetchUserAuthData = (username, password) => {
-    
-    users = authDB();
-    user_data = users.filter(users => users.username == username);
+const createNewUserAuth = async (username, password) => {
 
-    if (user_data.length == 0) {
-        throw new Error("User doesn't exist");
+    //check to see if password is long enough
+    if (password.toString().length < 8) {
+        throw new Error("Password is too short. Must be at least 8 characters long.");
     }
 
-    user_object = user_data[0]; //user_object.username or user_object.hash
-    
-    if (password !== user_object.hash) {
-        throw new Error("Wrong Password");
+    const hash = hashCode(password); //generate hash
+    var user = await createUserAuth(username, hash);
+
+    if (user == -1) {
+        throw new Error("Username is taken");
     }
 
-    return user_object;
+    return user;
 }
 
 module.exports = {
     hashCode,
-    fetchUserAuthData
+    createNewUserAuth
 }

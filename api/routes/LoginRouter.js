@@ -8,12 +8,17 @@ const {hashCode, fetchUserAuthData} = require('../controllers/LoginController');
 
 //routes here
 
-router.get('/:login', (req, res) => {
+router.get('/login', async (req, res) => {
     try {
+        const username = req.query.username;
+        const password = req.query.password;
 
-        const username = req.params.username;
-        const password = req.params.password;
-        const data = fetchUserAuthData(username, password);
+        if (username == undefined || password == undefined) {
+            throw new Error("Invalid params");
+        }
+
+        const hash = hashCode(password); //generate hash code
+        const data = await fetchUserAuthData(username, hash);
 
         const json_data = JSON.stringify(data);
         res.status(200).send(json_data);
@@ -25,7 +30,6 @@ router.get('/:login', (req, res) => {
         }
         const json_data = JSON.stringify(data);
         res.status(400).send(json_data);
-    
     }
 })
 

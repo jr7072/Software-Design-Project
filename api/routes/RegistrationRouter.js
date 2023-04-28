@@ -2,20 +2,22 @@ const express = require('express');
 const router = express.Router();
 
 //internal modules
-const {hashCode, fetchUserAuthData} = require('../controllers/RegistrationController');
+const {hashCode, createNewUserAuth} = require('../controllers/RegistrationController');
 
 // middleware here
 
 //routes here
 
-router.get('/:register', (req, res) => {
+router.get('/register', async (req, res) => {
     try {
+        const username = req.query.username;
+        const password = req.query.password;
 
-        const username = req.params.username;
-        const password = req.params.password;
-        const data = fetchUserAuthData(username, password);
+        if (username == undefined || password == undefined) {
+            throw new Error("Invalid params");
+        }
 
-        // NEEDS TO CHECK IF USER AUTH IS CORRECT
+        const data = await createNewUserAuth(username, password); //adds new user to Auth db
 
         const json_data = JSON.stringify(data);
         res.status(200).send(json_data);
@@ -27,7 +29,6 @@ router.get('/:register', (req, res) => {
         }
         const json_data = JSON.stringify(data);
         res.status(400).send(json_data);
-    
     }
 })
 
