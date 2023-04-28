@@ -12,15 +12,15 @@ function priceCalculation(Gallons, Address, fuelHistory){
     
     //if the address is local then the location factor is 0.02 if not then its 0.04
 
-    let local = 'TX'
+    let local = 'TX';
 
     let localFactor;
 
     if(Address.includes(local)){
-        localFactor = 0.02
+        localFactor = 0.02;
     }
     else {
-        localFactor = 0.04
+        localFactor = 0.04;
     }
 
     //if there's no fuel history then the history factor is 0% otherwise its 1%
@@ -52,11 +52,11 @@ function priceCalculation(Gallons, Address, fuelHistory){
 
     let margin = basePrice * (localFactor - histFactor + gallonFactor + compFactor);
 
-    let suggested = basePrice + margin;
+    const suggested = basePrice + margin;
 
-
+    const totalAmountDue = suggested * Gallons;
     //this is the total amount due
-    return suggested * Gallons;
+    return totalAmountDue;
 
 }
 
