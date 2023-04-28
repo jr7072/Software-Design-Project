@@ -21,9 +21,12 @@ const getUserData = async (id) => {
 
 const getUserFuelHistoryIds = async (id) => {
 
-    fuelHistoryids = getUserFuelHistory(id);
+    fuelHistoryids = await getUserFuelHistory(id);
 
-    delete fuelHistoryids.empty
+    //check for empty key
+    if (fuelHistoryids.hasOwnProperty('empty')){
+        delete fuelHistoryids.empty
+    }
 
     return Object.values(fuelHistoryids) 
 }

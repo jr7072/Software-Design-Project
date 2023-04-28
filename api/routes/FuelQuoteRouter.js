@@ -81,8 +81,12 @@ router.post('/:id', async (req, res) => {
     // update the user history
     await updateUserFuelHistory(id, fuel_ids);
 
+ 
     // create new fuel quote entry
     const fuelRef = db.ref(`fuel/${data.fuel_id}`);
+    
+    delete data.fuel_id;
+
     await fuelRef.set(data);
     
     const json_data = JSON.stringify(data);
