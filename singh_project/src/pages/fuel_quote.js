@@ -131,9 +131,9 @@ const FuelQuote = ( { cookies }) => {
 
                         <div className="mt-1 w-full bg-gray-100 font-semibold text-center text-gray-300 py-2 rounded-md  tracking-wide">
                             {price === null ? (
-                                <p>Price</p>
+                                <p>Suggested Price</p>
                                     ) : (
-                                <p>Price: {price}</p>
+                                <p>Suggested Price: {price}</p>
                             )}
                         </div>
                     
