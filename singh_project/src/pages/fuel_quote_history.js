@@ -1,6 +1,27 @@
-// fuel quote history page
+import { useEffect, useState } from 'react';
+import { parseCookies } from '@/helpers/parseCookie';
+import axios from 'axios';
 
-const FuelQuoteHistory = () => {
+const FuelQuoteHistory = ( { cookies } ) => {
+
+    const user_id = cookies.user.slice(1, -1);
+
+
+    const [quoteHistory, setQuoteHistory] = useState([]);
+
+    const fetchQuoteHistory = async () => {
+
+        const endpoint = `http://localhost:3080/fuelhistory/${user_id}`;
+        const response = await axios.get(endpoint);
+        const data = await response.data;
+
+        setQuoteHistory(data);
+    }
+
+
+    useEffect(() => {
+        fetchQuoteHistory();
+      }, []);
 
     return (
         <div class = "flex h-screen w-screen">
@@ -40,66 +61,25 @@ const FuelQuoteHistory = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        ...
-                                    </th>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    
-                                </tr>
-                                <tr class="border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        ...
-                                    </th>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
+                                
+                                {quoteHistory.map((quote) => (
+                                    <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
+                                        <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
+                                            {quote.gallons}
+                                        </th>
+                                        <td class="px-12 py-9 text-white">
+                                            {quote.address}
+                                        </td>
+                                        <td class="px-12 py-9 text-white">
+                                            {quote.date}
+                                        </td>
+                                        <td class="px-12 py-9 text-white">
+                                            {quote.price}
+                                        </td>
                                 
                                 </tr>
-                                <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        ...
-                                    </th>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    
-                                </tr>
-                                <tr class="border-b bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-                                    <th scope="row" class="px-6 py-4 font-lg text-gray-900 whitespace-nowrap dark:text-white">
-                                        ...
-                                    </th>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    <td class="px-12 py-9">
-                                        ...
-                                    </td>
-                                    
-                                </tr>
+                            ))}
+                                
                             </tbody>
                         </table>
                     </div>
@@ -109,6 +89,22 @@ const FuelQuoteHistory = () => {
         </div>
         </div>
     )
+}
+
+FuelQuoteHistory.getInitialProps = async ({ req, res }) => {
+    
+    const data = parseCookies(req)
+    
+    if (res) {
+      if (Object.keys(data).length === 0 && data.constructor === Object) {
+        res.writeHead(301, { Location: "/" })
+        res.end()
+      }
+    }
+    
+    return {
+      cookies: data && data,
+    }
 }
 
 export default FuelQuoteHistory;

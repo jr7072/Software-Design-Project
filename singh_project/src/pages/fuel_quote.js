@@ -1,65 +1,184 @@
 import Image from 'next/image'
+import { useState, useReducer, useEffect} from 'react';
+import States from "../components/states"
+import { useRouter } from "next/router"
+import axios, { AxiosError, HttpStatusCode } from 'axios'
+import { parseCookies } from '@/helpers/parseCookie';
 
 // fuel quote page
+const user_id = 1;
 
-export default function FuelQuote(){
+const FuelQuote = ( { cookies }) => {
+    
+    const [gallons, setGallons] = useState("");
+    const [date, setDate] = useState("");
+    const [address, setAddress] = useState("");
+    const [price, setPrice] = useState(0.0);
+
+    const user_id = cookies.user.slice(1, -1);
+
+
+    const getUserAddress = async() => {
+
+        const endpoint = `http://localhost:3080/users/${user_id}`;
+        const response = await axios.get(endpoint);
+        const addressLine1 = await response.data.addressLine1;
+        const addressLine2 = await response.data.addressLine2;
+        const city = await response.data.city;
+        const state = await response.data.state;
+        const zipCode = await response.data.zipCode;
+
+        const address_data = `${addressLine1} ${addressLine2} ${city} ${state} ${zipCode}`;
+
+        setAddress(address_data);
+
+        const addressElement = document.getElementById("address");
+        addressElement.value = address_data;
+
+    }
+
+    const upload_fuel_data = async() => {
+        
+        try{
+            const response = await axios.post(`http://localhost:3080/fuelquote/${user_id}`, {gallons, address, date, price});
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getFuelPrice = async() => {
+        const response = await axios.post(`http://localhost:3080/fuelquote/get_price/${user_id}`, {gallons, address});
+        const price_data = await response.data.price;
+        setPrice(price_data);
+    } 
+
+    const getFuelQuote = (e) => {
+        e.preventDefault();
+        getFuelPrice();
+
+    }
+
+    const saveFuelQuote = (e) => {
+        e.preventDefault();
+        upload_fuel_data();
+    }
+   
+    useEffect(() => {
+        getUserAddress();
+    }, []);
+
     return(
 
 
-        <div class = "flex h-screen w-screen">
-            <div class="flex-1 bg-quoteForm bg-cover bg-center bg-no-repeat">
-            <div class="sm:px-12 mx-auto flex items-center justify-between p-4 ">
-        <div class="flex items-center space-x-2">
+        //keep background
+        //get rid of the dropdown for the address
+        //change the color of the button
+        <form>
+        <div className = "flex h-screen w-screen">
+            <div className="flex-1 bg-quoteForm bg-cover bg-center bg-no-repeat">
+            <div className="sm:px-12 mx-auto flex items-center justify-between p-4 ">
+        <div className="flex items-center space-x-2">
           <a href="../account/">
             <img src="user.svg" alt="Logo" class="w-10"></img>
           </a>
         </div>
-        <nav class="flex items-center space-x-1 text-sm font-medium text-gray-800">
-          
-          <a href="../fuel_quote_history/"
-                        class="rounded-lg bg-yellow-600 px-3 py-2 text-white transition hover:bg-red-700">Quote History
+        <nav className="flex items-center space-x-1 text-sm font-medium text-gray-800">
+         
+          <a href="../fuel_quote_history"
+                        className="rounded-lg bg-yellow-600 px-3 py-2 text-white transition hover:bg-red-700">Quote History
+
 
                     </a>
         </nav>
       </div>
-                <div class="bg-grey-lighter min-h-screen flex flex-col">
-                    <div class="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
-                    <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
-                        <h1 class="mb-8 text-3xl text-center font-inter font-bold">Request a Quote</h1>
+                <div className="bg-grey-lighter min-h-screen flex flex-col">
+                    <div className="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
+                    <div className="bg-white px-6 py-8 rounded shadow-md text-black w-full">
+                        <h1 className="mb-8 text-3xl text-center font-inter font-bold">Request a Quote</h1>
 
-                        <label for="gallons" class="block mb-2 text-sm font-inter font-bold text-gray-900 dark:text-white">Number of Gallons</label>
-                        <input 
-                        type="number"
-                        class="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="gallons"
-                        placeholder="Gallons" />
+                        <input
+                            id="gallons"
+                            type="number"
+                            className="block border border-grey-light w-full p-3 rounded mb-4"
+                            value={gallons}
+                            name="gallons"
+                            placeholder="Gallons"
+                            onChange={(e) => setGallons(e.target.value)}
+                            min = "0"
+                            step = "any"
+                            required
+                        />
+                       
+                        <input
+                            id="address"
+                            disabled
+                            type="address"
+                            placeholder="Address"
+                            className="mt-6 mb-6 p-3 w-full bg-gray-100 py-2 rounded-md  text-black tracking-wide"
+                            value ={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                       
+                        ></input>
+                           
+                       
+                        <input
+                            id='date'
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            className="block border border-grey-light w-full p-3 rounded mb-4"
+                            name="date"
+                            placeholder="Month/Day/Year"
+                        />
 
-                        <label for="countries" class="block mb-2 text-sm font-inter font-bold text-gray-900 dark:text-white">Address:</label>
-                        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-3 mb-5 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            <option selected>Choose an Address</option>
-                            <option selected>4400 University Dr, Houston, TX 77004</option>
-                        </select>
-                        
-                        <label for="date" class="block mb-2 text-sm font-bold text-gray-900 font-inter dark:text-white">Date of Delivery:</label>
-                        <input 
 
-                        type="date"
-                        class="block border border-grey-light w-full p-3 rounded mb-4"
-                        name="date"
-                        placeholder="Month/Day/Year" />
-
-
-                        <label for="price" class="block mb-2 text-sm font-bold text-gray-900 dark:text-white mt-9 font-inter">Price:</label>
-                        <div class="mt-1 w-full bg-gray-100 font-semibold text-center text-gray-300 py-2 rounded-md  tracking-wide">Price</div>
-
-                        <button class="rounded-lg bg-yellow-600 mt-6 px-3 py-2 text-white transition hover:bg-red-700">Save</button>
+                        <div className="mt-1 w-full bg-gray-100 text-center text-black py-2 rounded-md tracking-wide">{price && <p> Price: {price}</p>}</div>
 
                     
+                        <div className='flex justify-between items-center mt-6'>
+                            <button    
+                                htmlFor ='price'
+                                onClick={saveFuelQuote}
+                                className="rounded-lg bg-yellow-600 px-3 py-2 text-white transition hover:bg-red-700">
+                                    Save Quote
+                            </button>
+
+
+                            <button    
+                                htmlFor ='price'
+                                onClick={getFuelQuote}
+                                className="rounded-lg bg-yellow-600 px-3 py-2 text-white transition hover:bg-red-700">
+                                    Get Fuel Quote
+                            </button>
+                        </div>
+                   
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
+
+
+        </form>
+       
     )
 }
+
+FuelQuote.getInitialProps = async ({ req, res }) => {
+    
+    const data = parseCookies(req)
+    
+    if (res) {
+      if (Object.keys(data).length === 0 && data.constructor === Object) {
+        res.writeHead(301, { Location: "/" })
+        res.end()
+      }
+    }
+    
+    return {
+      cookies: data && data,
+    }
+}
+
+
+export default FuelQuote;

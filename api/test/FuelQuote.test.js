@@ -1,71 +1,75 @@
-const { validateFields, checkFieldStatus } = require('../controllers/UserController');
+const {checkFieldStatus, validateFields } = require('../controllers/FuelController');
+const {getStatus, getFuelData} = require('../models/UserDB');
 
-it('should return an error for missing fields', () => {
-  const data = {
-    gallons: '',
-    address: '',
-    date: ''
-  };
-  const result = validateFields(data);
-  expect(result).toEqual({
-    success: false,
-    errors: {
-      gallons: 'Gallons is required',
-      address: 'Address is required',
-      date: 'Delivery date is required'
-    }
+jest.mock('../models/UserDB');
+
+it('checks if field status is true', async () => {
+    
+  //mock database call
+  getStatus.mockReturnValue(true);
+
+  const expected = true;
+  
+  const result = await checkFieldStatus({});
+  
+  expect(result).toStrictEqual(expected);
+
+})
+
+it('checks if field status is false', async () => {
+    
+  //mock database call
+  getStatus.mockReturnValue(false);
+
+  const expected = false;
+  
+  const result = await checkFieldStatus({'gallons': 'Gallons field is required'});
+  
+  expect(result).toStrictEqual(expected);
+
+})
+
+it('checks if results is empty', async () => {
+    
+  //mock database call
+  getFuelData.mockReturnValue({
+    'gallons': '100',
+    'address': 'TX  Houston TX 77082',
+    'date': '2023-04-29',
+    'price': 171
   });
-});
 
-it('should return an error for invalid fields', () => {
   const data = {
-    gallons: 'abc',
-    address: '123 Main St',
-    date: '2023-04-31'
+    'gallons': '100',
+    'address': 'TX  Houston TX 77082',
+    'date': '2023-04-29',
+    'price': 171
   };
-  const result = validateFields(data);
-  expect(result).toEqual({
-    success: false,
-    errors: {
-      gallons: 'Gallons must be a number greater than 0',
-      address: 'Address must be a valid string',
-      date: 'Delivery date must be a valid date in YYYY-MM-DD format'
-    }
-  });
-});
 
-it('should return success for valid fields', () => {
-  const data = {
-    gallons: '100',
-    address: '123 Main St',
-    date: '2023-04-01'
+  const expected = {};
+  
+  const result = await validateFields(data);
+  
+  expect(result).toStrictEqual(expected);
+
+})
+
+it('checks if results are flagged', async () => {
+    
+  //mock database call
+  getFuelData.mockReturnValue({});
+
+  const data = {};
+
+  const expected = {
+    'gallons': 'Gallons field is required',
+    'address': 'Address field is required',
+    'date': 'Date field is required',
+    'price': 'Price field is required'
   };
-  const result = validateFields(data);
-  expect(result).toEqual({
-    success: true,
-    errors: {}
-  });
-});
+  
+  const result = await validateFields(data);
+  
+  expect(result).toStrictEqual(expected);
 
-it('should return false for invalid field status', () => {
-  const data = {
-    success: false,
-    errors: {
-      gallons: 'Gallons must be a number greater than 0',
-      address: 'Address must be a valid string',
-      date: 'Delivery date must be a valid date in YYYY-MM-DD format'
-    }
-  };
-  const result = checkFieldStatus(data);
-  expect(result).toEqual(false);
-});
-
-it('should return true for valid field status', () => {
-  const data = {
-    success: true,
-    errors: {}
-  };
-  const result = checkFieldStatus(data);
-  expect(result).toEqual(true);
-});
-
+})

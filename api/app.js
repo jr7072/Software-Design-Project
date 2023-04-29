@@ -1,12 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const args = require('args-parser')(process.argv);
-const cors = require('cors')
+const cors = require('cors');
 
 //routers
 const users = require('./routes/UserRouter');
 const fuelquote = require('./routes/FuelQuoteRouter')
-const login = require('./routes/LoginRouter')
+const fuelhistory = require('./routes/FuelHistoryRouter');
+const login = require('./routes/LoginRouter');
+const registration = require('./routes/RegistrationRouter');
 
 // init app object
 const app = express();
@@ -32,8 +34,10 @@ app.get("/", (req, res) => {
 
 // routers here
 app.use('/login', login);
+app.use('/registration', registration);
 app.use('/fuelquote', fuelquote);
 app.use('/users', users);
+app.use('/fuelhistory', fuelhistory);
 
 
 //start server

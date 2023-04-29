@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 //internal modules
-const {hashCode, fetchUserAuthData} = require('../controllers/LoginController');
+const {hashCode, createNewUserAuth} = require('../controllers/RegistrationController');
 
 // middleware here
 
 //routes here
 
-router.get('/login', async (req, res) => {
+router.get('/register', async (req, res) => {
     try {
         const username = req.query.username;
         const password = req.query.password;
@@ -17,7 +17,7 @@ router.get('/login', async (req, res) => {
             throw new Error("Invalid params");
         }
         
-        const data = await fetchUserAuthData(username, password);
+        const data = await createNewUserAuth(username, password); //adds new user to Auth db
 
         const json_data = JSON.stringify(data);
         res.status(200).send(json_data);

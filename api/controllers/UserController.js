@@ -1,40 +1,72 @@
 // user functions
-const {getUsers} = require('../models/UserDB');
+const {
+    getUsers,
+    updateUser,
+    getUserFuelHistory
+} = require('../models/UserDB');
 
 
-const getUserData = (id) => {
-    users = getUsers()
-    user_data = users.filter(users => users.id == id);
+const getUserData = async (id) => {
+    
+    user = await getUsers(id)
 
-    if (user_data.length == 0){
+    if (!user){
         throw new Error("User doesn't exist");
     }
 
-    return user_data[0];
+    delete user.fuelQuote;
+
+    return user;
 }
 
+const getUserFuelHistoryIds = async (id) => {
 
-const updateUserData = (id, data) => {
-    
-    users = getUsers() 
-    user_data = users.filter(users => users.id == id);
+    fuelHistoryids = await getUserFuelHistory(id);
 
-    if (user_data.length == 0) {
+    //check for empty key
+    if (fuelHistoryids.hasOwnProperty('empty')){
+        delete fuelHistoryids.empty
+    }
+
+    return Object.values(fuelHistoryids) 
+}
+
+const updateUserFuelHistory = async (id, data) => {
+
+    user = await getUsers(id);
+
+    if (!user) {
         throw new Error("User doesn't exist");
     }
 
-    user_object = user_data[0];
+    user.fuelQuote = data;
+
+    await updateUser(id, user);
+}
+
+const updateUserData = async (id, data) => {
+    
+    user = await getUsers(id);
+
+    if (!user) {
+        throw new Error("User doesn't exist");
+    }
   
     for (const [key, value] of Object.entries(data)){
         
-        if (!user_object.hasOwnProperty(key)){
+        if (!user.hasOwnProperty(key)){
             throw new Error(`Invalid field: ${key}`);
         }
 
-        user_object[key] = value;
+        user[key] = value;
     }
 
-    return user_object;
+
+    await updateUser(id, user);
+
+    delete user.fuelQuote;
+
+    return user;
 }
 
 const validateFields = (proposedData) => {
@@ -100,7 +132,9 @@ const checkFieldStatus = (fieldResults) => {
 
 module.exports = {
     getUserData,
+    getUserFuelHistoryIds,
     updateUserData,
     validateFields,
-    checkFieldStatus
+    checkFieldStatus,
+    updateUserFuelHistory
 }

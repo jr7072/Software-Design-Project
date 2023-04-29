@@ -4,10 +4,6 @@ import { useRouter } from "next/router"
 import axios, { AxiosError, HttpStatusCode } from 'axios'
 
 
-//assume user 1 in logged in for now
-const user_id = 1;
-
-
 //form initial state
 const initialState = {
   firstName:  "",
@@ -43,10 +39,12 @@ const reducer = (state, action) => {
 }
 
 
-const AccountForm = () => {
+const AccountForm = ({ user }) => {
   
   const [state, dispatch] = useReducer(reducer, initialState);
   const router = useRouter();
+
+  const user_id = user.slice(1, -1);
 
   const fetchUserData = async () => {
     
@@ -90,7 +88,7 @@ const AccountForm = () => {
       const status = await response.status;
 
       // handle http accepted but not successful
-      if (status !== 204){
+      if (status !== 200){
         throw(`resource not updated returned ${status}`);
       }
 

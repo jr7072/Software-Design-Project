@@ -1,81 +1,125 @@
-// database funtions
-// we will build this out later
+const { v1 } = require('uuid');
+const { db } = require('../db/firebase_util.js');
 
+const getUsers = async (id) => {  
 
-const getUsers = () => {  
-    return [
-        {
-            "id": 1,
-            "firstName": "John",
-            "lastName": "Doe",
-            "addressLine1": "123 Main St",
-            "addressLine2": null,
-            "city": "Anytown",
-            "state": "CA",
-            "zipCode": "12345"
-        },
-        {
-            "id": 2,
-            "firstName": "Jane",
-            "lastName": "Smith",
-            "addressLine1": "456 Elm St",
-            "addressLine2": "Apt 2B",
-            "city": "Somecity",
-            "state": "TX",
-            "zipCode": "67890"
-        },
-        {
-            "id": 3,
-            "firstName": "Bob",
-            "lastName": "Johnson",
-            "addressLine1": "789 Oak St",
-            "addressLine2": null,
-            "city": "Othercity",
-            "state": "WA",
-            "zipCode": "24680"
-        },
-        {
-            "id": 4,
-            "firstName": "Sarah",
-            "lastName": "Lee",
-            "addressLine1": "432 Park Ave",
-            "addressLine2": "Suite 100",
-            "city": "Bigcity",
-            "state": "AL",
-            "zipCode": "54321"
-        },
-        {
-            "id": 5,
-            "firstName": "Mike",
-            "lastName": "Smith",
-            "addressLine1": "321 Maple St",
-            "addressLine2": "Unit 5",
-            "city": "Smalltown",
-            "state": "FL",
-            "zipCode": "13579"
-        }
-    ];      
+    const userRef = db.ref(`users/${id}`);
+    const snapshot = await userRef.once("value");
+    const users = snapshot.val();
+    return users;
 }
 
+
+const getUserFuelHistory = async (id) => {
+    const userRef = db.ref(`users/${id}`);
+    const snapshot = await userRef.once("value");
+    const user = snapshot.val();
+    return user.fuelQuote;
+}
+
+
+const getAuth = async (username) => {
+    //retrieves Auth object from db
+    const authRef = db.ref("Auth");
+    const snapshot = await authRef.once("value");
+    const auths = snapshot.val();
+
+    //searches through Auth object for user that matches username parameter
+    result = -1;
+    for (const key in auths) {
+        if (auths[key].username == username) {
+            //if a match is found, save it in result
+            result = auths[key];
+            result.id = key;
+        }
+    }
+
+    return result;
+}
+
+const createUser = async (key) => {
+
+    const userRef = db.ref("users");
+    const snapshot = await userRef.once("value");
+    const users = snapshot.val();
+
+    const data = {
+        'firstName': "",
+        'lastName': "",
+        'addressLine1': "",
+        'addressLine2': "",
+        'city': "",
+        'state': "",
+        'zipCode': ""
+    }
+
+    var newUserRef = userRef.child(key);
+    newUserRef.set(data);
+    var nested = newUserRef.child("fuelQuote").set({"empty": "empty"});
+
+    return -1;
+}
+
+const createUserAuth = async (username, hash) => {
+
+    const authRef = db.ref("Auth");
+    const snapshot = await authRef.once("value");
+    const auths = snapshot.val();
+
+    result = {"hash": hash, "username": username};
+
+    //if username is already taken, return -1
+    var authLength = Object.keys(auths).length;
+    for (const key in auths) {
+        if (auths[key].username == username) {
+            return -1;
+        }
+    }
+
+    //if username not taken, add to database
+    //generate new key based off length of Auth object + 1
+    var key = v1();
+    //adds new entry with key and result as the value
+    var newAuthRef = authRef.child(key);
+    newAuthRef.set(result);
+    createUser(key);
+
+    result.id = key;
+
+    return result;
+}
 
 const updateUser = (id, data) => {
-    return -1;
+    userRef = db.ref(`users/${id}`);
+    userRef.update(data);
 }
-
-
-const createUser = (data) => {
-    return -1;
-}
-
 
 const deleteUser = (id) => {
+    return -1;
+}
+
+const getPrice = () => {
+    return -1;
+}
+
+const getStatus = () => {
+    return -1;
+}
+
+const getFuelData = () => {
     return -1;
 }
 
 
 module.exports = {
     getUsers,
+    getUserFuelHistory,
     updateUser,
     createUser,
-    deleteUser
+    deleteUser,
+    getAuth,
+    createUserAuth,
+    getPrice,
+    getStatus,
+    getFuelData
 };
